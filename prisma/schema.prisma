@@ -8,3 +8,7 @@ datasource db {
   relationMode = "prisma"
 }
 
+model Setting {
+  id String @id @default(uuid())
+  storeName String @default("")
+}
