@@ -1,9 +1,18 @@
 import { NextResponse } from "next/server";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
+import chrome from 'chrome-aws-lambda';
 
 export async function GET(req: Request) {
+  let browser: any;
+
+  console.log("Executable Path:", await chrome.executablePath);
+
   try {
-    const browser = await puppeteer.launch({ headless: "new" });
+    browser = await puppeteer.launch({
+      args: chrome.args,
+      executablePath: await chrome.executablePath,
+      headless: chrome.headless,
+    });
     const page = await browser.newPage();
 
     await page.goto(
@@ -24,10 +33,13 @@ export async function GET(req: Request) {
       };
     });
 
-    await browser.close();
     return NextResponse.json(productData);
   } catch (error) {
     console.log("[DATA_GET]", error);
     return new NextResponse("Internal error", { status: 500 });
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
   }
 }
