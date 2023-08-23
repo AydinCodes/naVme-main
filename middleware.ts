@@ -1,6 +1,14 @@
 import { authMiddleware } from "@clerk/nextjs";
-export default authMiddleware({});
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+  api: {
+    bodyParser: false,
+  },
 };
+
+const handler = authMiddleware({
+  publicRoutes: ["/api/get-data"],
+  ignoredRoutes: ["/((?!api|trpc))(_next|.+\..+)(.*)"],
+});
+
+export default handler;
