@@ -2,13 +2,17 @@
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { RefreshCcw } from "lucide-react";
 import React, { useState } from "react";
 
+type DataType = {
+  author: string;
+  text: string;
+};
+
 const DisplayData = () => {
-  const [data, setData] = useState<{
-    title?: string | null;
-    price?: string | null;
-  }>({});
+  // Adjust state to be an array
+  const [data, setData] = useState<DataType[]>([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -21,11 +25,9 @@ const DisplayData = () => {
         throw new Error("Failed to fetch data");
       }
 
-      const productData = await response.json();
-      setData({
-        title: productData.title || undefined,
-        price: productData.price || undefined,
-      });
+      const allData: DataType[] = await response.json();
+      setData(allData);
+
     } catch (error) {
       console.error("Failed to fetch data:", error);
     }
@@ -34,15 +36,15 @@ const DisplayData = () => {
 
   return (
     <div className="flex flex-col">
-      <Button disabled={loading} className="w-[8rem]" onClick={handleFetchData}>
-        {loading ? "Fetching..." : "Fetch data"}
+      <Button variant={"secondary"} disabled={loading} className="w-[2rem] h-[2rem] p-0 m-0" onClick={handleFetchData}>
+        <RefreshCcw />
       </Button>
-      {data.title && data.title.length > 0 && (
-        <>
-          <Label>Title: {data.title}</Label>
-          <Label>Price: {data.price}</Label>
-        </>
-      )}
+      {data.map((item, index) => (
+        <div key={index}>
+          <Label>Author: {item.author}</Label>
+          <Label>Quote: {item.text}</Label>
+        </div>
+      ))}
     </div>
   );
 };

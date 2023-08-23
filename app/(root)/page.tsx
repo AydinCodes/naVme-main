@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
+
 import { UserButton } from "@clerk/nextjs";
-import Image from "next/image";
+
 import DisplayData from "./display-data";
+  
 
-export default function Home() {
-
+export default async function Home() {
 
   return (
     <div className="p-4">
