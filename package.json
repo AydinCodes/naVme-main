@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.23.2",
-    "@prisma/client": "^5.1.1",
+    "@prisma/client": "^5.2.0",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@types/node": "20.5.1",
@@ -35,6 +35,6 @@
   },
   "devDependencies": {
     "@types/http-errors": "^2.0.1",
-    "prisma": "^5.1.1"
+    "prisma": "^5.2.0"
   }
 }

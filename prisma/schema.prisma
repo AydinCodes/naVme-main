@@ -6,19 +6,17 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
-model User {
-  id       String      @id @default(uuid())
-  username String
-  url      String
-}
 
-
-model Setting {
+model Store {
   id String @id @default(uuid())
-  storeName String @default("")
+  userId String
+  name String
+  deliveryManager String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
