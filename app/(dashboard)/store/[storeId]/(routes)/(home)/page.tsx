@@ -1,15 +1,15 @@
-import Navbar from "@/components/Navbar";
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import HomeForm from "./components/HomeForm";
 
-export default async function DashboardLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { storeId: string };
-}) {
+interface HomePageProps {
+  params: {
+    storeId: string;
+  };
+}
+
+const HomePage: React.FC<HomePageProps> = async ({ params }) => {
   const { userId } = auth();
 
   if (!userId) {
@@ -26,11 +26,13 @@ export default async function DashboardLayout({
   if (!store) {
     redirect("/");
   }
-
   return (
-    <>
-      <Navbar />
-      {children}
-    </>
+    <div className="flex-col">
+      <div className="flex-1 space-y-4 p-8 pt-6">
+        <HomeForm />
+      </div>
+    </div>
   );
-}
+};
+
+export default HomePage;
