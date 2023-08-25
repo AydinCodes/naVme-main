@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import HomeForm from "./components/HomeForm";
+import HomeForm from "./components/home-form";
 
 interface HomePageProps {
   params: {

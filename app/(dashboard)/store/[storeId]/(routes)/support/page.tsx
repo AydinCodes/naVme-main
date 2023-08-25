@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import SupportForm from "./components/SupportForm";
+import SupportForm from "./components/support-form";
 
 interface SupportPageProps {
   params: {
