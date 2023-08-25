@@ -1,9 +1,4 @@
 
-import { UserButton } from "@clerk/nextjs";
-
-import DisplayData from "../../../display-data";
-  
-
 export default async function Home() {
 
   return (
