@@ -1,3 +1,5 @@
+import DisplayData from "./display-data";
+
 interface HomeFormProps {
     
 }
@@ -5,7 +7,7 @@ interface HomeFormProps {
 const HomeForm: React.FC<HomeFormProps> = ({  }) => {
     return (
         <div>
-            Home Form
+            <DisplayData />
         </div>
     );
 };

@@ -13,6 +13,8 @@ export async function POST(req: Request) {
 
     store.data = body;
 
+    console.log(body)
+
     return new NextResponse(`Data received`, { status: 200 });
   } catch (error: any) {
     return new NextResponse(`Error: ${error.message}`, { status: 400 });
