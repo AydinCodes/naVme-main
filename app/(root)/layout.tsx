@@ -1,6 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import Navbar from "./components/home-navbar";
 
 export default async function SetupLayout({
   children,
@@ -9,19 +10,22 @@ export default async function SetupLayout({
 }) {
   const { userId } = auth();
 
-  if (!userId) {
-    redirect("/sign-in");
+  if (userId) {
+    const customer = await prismadb.customer.findFirst({
+      where: {
+        userId,
+      },
+    });
+
+    if (customer) {
+      redirect(`/app/${customer.id}`);
+    }
   }
 
-  const store = await prismadb.store.findFirst({
-    where: {
-      userId,
-    },
-  });
-
-  if (store) {
-    redirect(`/store/${store.id}`);
-  }
-
-  return <>{children}</>;
+  return (
+    <>
+      <Navbar />
+      {children}
+    </>
+  );
 }

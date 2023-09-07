@@ -12,11 +12,12 @@ datasource db {
 }
 
 
-model Store {
+model Customer {
   id String @id @default(uuid())
   userId String
   name String
-  deliveryManager String
+  plan String @default("hobby")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+

@@ -13,19 +13,19 @@ export function MainNav({
 
   const routes = [
     {
-      href: `/app/${params.customerId}`,
-      label: "Home",
-      active: pathname === `/app/${params.customerId}`,
+      href: `/product`,
+      label: "Product",
+      active: pathname === `/product`,
     },
     {
-      href: `/app/${params.customerId}/settings`,
-      label: "Settings",
-      active: pathname.startsWith(`/app/${params.customerId}/settings`),
+      href: `/about`,
+      label: "About",
+      active: pathname.startsWith(`/about`),
     },
     {
-      href: `/app/${params.customerId}/support`,
+      href: `/support`,
       label: "Support",
-      active: pathname.startsWith(`/app/${params.customerId}/support`),
+      active: pathname.startsWith(`/support`),
     }
   ];
   return (

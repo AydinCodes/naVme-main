@@ -1,38 +1,38 @@
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import SettingsForm from "./components/settings-form";
+import HomeForm from "./components/home-form";
 
-interface SettingsPageProps {
+interface HomePageProps {
   params: {
-    storeId: string;
+    customerId: string;
   };
 }
 
-const SettingsPage: React.FC<SettingsPageProps> = async ({ params }) => {
+const HomePage: React.FC<HomePageProps> = async ({ params }) => {
   const { userId } = auth();
 
   if (!userId) {
     redirect("/sign-in");
   }
 
-  const store = await prismadb.store.findFirst({
+  const customer = await prismadb.customer.findFirst({
     where: {
-      id: params.storeId,
+      id: params.customerId,
       userId,
     },
   });
 
-  if (!store) {
+  if (!customer) {
     redirect("/");
   }
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <SettingsForm/>
+        <HomeForm />
       </div>
     </div>
   );
 };
 
-export default SettingsPage;
+export default HomePage;

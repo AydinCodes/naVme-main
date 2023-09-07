@@ -1,17 +1,17 @@
 import { NextResponse } from "next/server";
 
-// Define a type for the store
-type Store = {
+// Define a type for the customer
+type Customer = {
   data?: any; 
 };
 
-let store: Store = {};
+let customer: Customer = {};
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    store.data = body;
+    customer.data = body;
 
     console.log(body)
 
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 }
 export async function GET(req: Request) {
   try {
-    const data = store.data;
+    const data = customer.data;
 
     if (!data) {
       return new NextResponse(`No data available`, { status: 404 });
