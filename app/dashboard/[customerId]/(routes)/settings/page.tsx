@@ -1,15 +1,15 @@
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import HomeForm from "./components/home-form";
+import SettingsForm from "./components/settings-form";
 
-interface HomePageProps {
+interface SettingsPageProps {
   params: {
     customerId: string;
   };
 }
 
-const HomePage: React.FC<HomePageProps> = async ({ params }) => {
+const SettingsPage: React.FC<SettingsPageProps> = async ({ params }) => {
   const { userId } = auth();
 
   if (!userId) {
@@ -24,15 +24,15 @@ const HomePage: React.FC<HomePageProps> = async ({ params }) => {
   });
 
   if (!customer) {
-    redirect("/");
+    redirect("/auth");
   }
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <HomeForm />
+        <SettingsForm/>
       </div>
     </div>
   );
 };
 
-export default HomePage;
+export default SettingsPage;

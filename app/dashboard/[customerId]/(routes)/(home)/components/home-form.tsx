@@ -7,7 +7,7 @@ interface HomeFormProps {
 const HomeForm: React.FC<HomeFormProps> = ({  }) => {
     return (
         <div>
-            <DisplayData />
+            Hi
         </div>
     );
 };

@@ -8,19 +8,6 @@ export default async function SetupLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = auth();
-
-  if (userId) {
-    const customer = await prismadb.customer.findFirst({
-      where: {
-        userId,
-      },
-    });
-
-    if (customer) {
-      redirect(`/app/${customer.id}`);
-    }
-  }
 
   return (
     <>

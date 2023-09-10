@@ -15,7 +15,7 @@ datasource db {
 model Customer {
   id String @id @default(uuid())
   userId String
-  name String
+  storeName String @default("")
   plan String @default("hobby")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
