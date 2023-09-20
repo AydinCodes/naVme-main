@@ -7,6 +7,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { Label } from "@/components/ui/label";
 import { au } from "@/lib/coordinates";
 import { useLoadScript, GoogleMap, Marker } from "@react-google-maps/api";
 import { useMemo, useState } from "react";
@@ -14,6 +15,13 @@ import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
 } from "use-places-autocomplete";
+
+interface AddressObject {
+  description: string;
+  place_id: string;
+  lat: number;
+  lng: number;
+}
 
 const country = au;
 
@@ -37,10 +45,20 @@ const Google = () => {
 const Map = () => {
   const center = useMemo(() => ({ lat: -37.8176665, lng: 144.9672122 }), []);
   const [selected, setSelected] = useState(null);
-
+  const [addresses, setAddresses] = useState<AddressObject[]>([]);
   return (
-    <div className="flex space-x-[10rem]">
-      <PlacesAutocomplete setSelected={setSelected} />
+    <div className="flex justify-between">
+      <div className="w-[40%] relative">
+        <PlacesAutocomplete
+          setAddresses={setAddresses}
+          className="w-[80%] z-[2] absolute"
+          setSelected={setSelected}
+        />
+        <AddressList
+          addresses={addresses}
+          className="absolute top-[6rem] left-0 z-[1]"
+        />
+      </div>
       <GoogleMap
         zoom={10}
         center={center}
@@ -52,7 +70,17 @@ const Map = () => {
   );
 };
 
-const PlacesAutocomplete = ({ setSelected }: any) => {
+interface PlacesAutocompleteProps {
+  setSelected: any;
+  setAddresses: any;
+  className: string;
+}
+
+const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
+  setSelected,
+  setAddresses,
+  className,
+}) => {
   const [showResults, setShowResults] = useState(false);
 
   const {
@@ -71,17 +99,27 @@ const PlacesAutocomplete = ({ setSelected }: any) => {
     },
   });
 
-  const handleSelect = async (address: any) => {
-    setValue(address, false);
-    clearSuggestions();
-
+  const handleSelect = async (address: string, place_id: string) => {
     const results = await getGeocode({ address });
     const { lat, lng } = await getLatLng(results[0]);
+
+    // Create an address object with description, place_id, and lat/lng
+    const selectedAddress: AddressObject = {
+      description: address,
+      place_id: place_id,
+      lat,
+      lng,
+    };
+
+    setAddresses((prevAddresses: AddressObject[]) => [...prevAddresses, selectedAddress]);
+    setValue('', false);
+    clearSuggestions();
+
     setSelected({ lat, lng });
   };
 
   return (
-    <div className="w-[80%]">
+    <div className={className}>
       <Command
         onFocus={() => setShowResults(true)}
         onBlur={() => setShowResults(false)}
@@ -93,11 +131,14 @@ const PlacesAutocomplete = ({ setSelected }: any) => {
           disabled={!ready}
         />
 
-        <CommandList>
+        <CommandList className="bg-white dark:bg-slate-950">
           <CommandEmpty hidden={!showResults}>No results found.</CommandEmpty>
           {status === "OK" &&
-            data.map(({ place_id, description }) => (
-              <CommandItem onSelect={handleSelect} key={place_id}>
+            data.map(({ place_id, description}) => (
+              <CommandItem
+                onSelect={() => handleSelect(description, place_id)}
+                key={place_id}
+              >
                 {description}
               </CommandItem>
             ))}
@@ -107,7 +148,22 @@ const PlacesAutocomplete = ({ setSelected }: any) => {
   );
 };
 
-export default Google;
+interface AddressListProps {
+  className?: string;
+  addresses?: AddressObject[];
+}
 
+const AddressList: React.FC<AddressListProps> = ({ className, addresses }) => {
+  return (
+    <div className={className}>
+      <div className="flex flex-col space-y-[2rem]">
+      {addresses?.map((address) => (
+        <Label key={address.place_id}>{address.description}</Label>
+      ))}</div>
+    </div>
+  );
+};
+
+export default Google;
 
 // save address value in a state to keep the capitalization
