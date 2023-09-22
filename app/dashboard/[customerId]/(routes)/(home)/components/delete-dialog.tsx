@@ -20,7 +20,7 @@ interface DeleteDialogProps {
             <Trash2 />
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="w-[10rem] h-[14rem]">
           <DialogHeader>
             <DialogTitle>Delete Job</DialogTitle>
             <DialogDescription>

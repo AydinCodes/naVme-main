@@ -17,15 +17,14 @@ import usePlacesAutocomplete, {
 const country = au;
 
 interface GooglePlacesSearchProps {
-  setSelected: any;
+  handleSelected: any;
   className: string;
 }
 
 const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
-  setSelected,
+  handleSelected,
   className,
 }) => {
-  const { addJob } = useJobs();
   const [showResults, setShowResults] = useState(false);
   const itemSelectedRef = useRef(false);
 
@@ -58,11 +57,9 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
       lng,
     };
 
-    addJob(selectedJob);
+    handleSelected(selectedJob);
     setValue("", false);
     clearSuggestions();
-
-    setSelected({ lat, lng });
   };
 
   return (
