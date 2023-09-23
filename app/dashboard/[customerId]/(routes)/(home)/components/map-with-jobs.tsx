@@ -1,17 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { GoogleMap, Marker } from "@react-google-maps/api";
-
 import GooglePlacesSearch from "./google-places-search";
 import JobList from "./job-list";
 import { JobObject, useJobs } from "@/hooks/useJobs";
+import GoogleMapContainer from "./google-map-container";
 
 const MapWithJobs = () => {
-  const center = useMemo(() => ({ lat: -37.8176665, lng: 144.9672122 }), []);
-  const [selected, setSelected] = useState(null);
 
-  const { addJob } = useJobs();
+  const { addJob, jobs } = useJobs();
 
   const handleSelect = (selectedJob: JobObject) => {
     addJob(selectedJob);
@@ -24,15 +20,9 @@ const MapWithJobs = () => {
           className="w-[100%] z-[2]"
           handleSelected={handleSelect}
         />
-        <JobList className="absolute bottom-0 z-[1]" />
+        <JobList jobs={jobs} className="absolute bottom-0 z-[1]" />
       </div>
-      <GoogleMap
-        zoom={10}
-        center={center}
-        mapContainerClassName="w-[60%] rounded-[0.5rem]"
-      >
-        {selected && <Marker position={selected} />}
-      </GoogleMap>
+      <GoogleMapContainer jobs={jobs} />
     </div>
   );
 };

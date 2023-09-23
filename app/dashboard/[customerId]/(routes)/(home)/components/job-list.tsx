@@ -1,7 +1,7 @@
 "use client";
 
 import { Label } from "@/components/ui/label";
-import { useJobs } from "@/hooks/useJobs";
+import { JobObject, useJobs } from "@/hooks/useJobs";
 
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -11,10 +11,10 @@ import EditDialog from "./edit-dialog";
 
 interface JobListProps {
   className?: string;
+  jobs?: JobObject[]
 }
 
-const JobList: React.FC<JobListProps> = ({ className }) => {
-  const { jobs } = useJobs();
+const JobList: React.FC<JobListProps> = ({ className, jobs }) => {
 
   return (
     <div className={cn(className, "w-[100%] h-[87%]")}>

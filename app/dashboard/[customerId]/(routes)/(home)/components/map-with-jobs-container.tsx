@@ -7,7 +7,7 @@ import MapWithJobs from "./map-with-jobs";
 
 
 
-const MapContainerWithJobs = () => {
+const MapWithJobsContainer = () => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
     libraries: ["places"],
@@ -27,4 +27,4 @@ const MapContainerWithJobs = () => {
 
 
 
-export default MapContainerWithJobs;
+export default MapWithJobsContainer;
