@@ -19,13 +19,13 @@ const country = au;
 interface GooglePlacesSearchProps {
   handleSelected: any;
   className?: string;
-  placeholder: string
+  placeholder: string;
 }
 
 const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
   handleSelected,
   className,
-  placeholder
+  placeholder,
 }) => {
   const [showResults, setShowResults] = useState(false);
   const itemSelectedRef = useRef(false);
@@ -46,7 +46,13 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
     },
   });
 
-  const handleSelect = async (address: string, place_id: string) => {
+  const handleSelect = async (
+    address: string,
+    place_id: string,
+    suburb: string,
+    state: string,
+    country: string
+  ) => {
     setShowResults(false);
     const results = await getGeocode({ address });
     const { lat, lng } = await getLatLng(results[0]);
@@ -54,6 +60,9 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
     const selectedJob: JobObject = {
       jobId: jobId,
       address: address,
+      suburb: suburb,
+      state: state,
+      country: country,
       placeId: place_id,
       lat,
       lng,
@@ -90,11 +99,14 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
           <CommandEmpty hidden={!showResults}>No results found.</CommandEmpty>
           {status === "OK" &&
             showResults &&
-            data.map(({ place_id, description }) => (
+            data.map(({ place_id, description, terms }) => (
               <CommandItem
                 onSelect={() => {
                   itemSelectedRef.current = true;
-                  handleSelect(description, place_id);
+                  const suburb = terms[2].value;
+                  const state = terms[3].value;
+                  const country = terms[4].value;
+                  handleSelect(description, place_id, suburb, state, country);
                 }}
                 key={place_id}
               >

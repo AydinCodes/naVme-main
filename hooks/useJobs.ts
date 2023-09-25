@@ -3,6 +3,9 @@ import { create } from "zustand";
 export interface JobObject {
   jobId: string;
   address: string;
+  suburb: string;
+  state: string;
+  country: string;
   placeId: string;
   lat: number;
   lng: number;

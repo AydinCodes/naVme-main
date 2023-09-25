@@ -19,7 +19,8 @@ interface EditDialogProps {
   jobId: string;
 }
 
-interface NewJobDetails extends Omit<JobObject, "jobId"> {}
+interface NewJobDetails extends Omit<JobObject, "jobId" | "suburb" | "state" | "country"> {}
+
 
 const EditDialog: React.FC<EditDialogProps> = ({ jobId }) => {
   const [editAddress, setEditAddress] = useState(false);

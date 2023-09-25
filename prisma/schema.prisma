@@ -12,15 +12,16 @@ datasource db {
 }
 
 model Customer {
-  id            String   @id @default(uuid())
-  userId        String
-  plan          String   @default("hobby")
-  name     String   @default("")
-  address  String   @default("")
-  lat      Float    @default(-26)
-  lng      Float    @default(135)
-  state    String   @default("")
-  vehicles Int      @default(1)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id        String   @id @default(uuid())
+  userId    String
+  plan      String   @default("hobby")
+  name      String   @default("")
+  address   String   @default("")
+  lat       Float    @default(-26)
+  lng       Float    @default(135)
+  state     String   @default("")
+  country   String   @default("")
+  vehicles  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
