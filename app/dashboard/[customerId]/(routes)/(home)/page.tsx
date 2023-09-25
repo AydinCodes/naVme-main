@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import MapWithJobsContainer from "./components/map-with-jobs-container";
+import MapWithJobs from "./components/map-with-jobs";
 
 interface HomePageProps {
   params: {
@@ -29,7 +29,7 @@ const HomePage: React.FC<HomePageProps> = async ({ params }) => {
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <MapWithJobsContainer />
+        <MapWithJobs />
       </div>
     </div>
   );

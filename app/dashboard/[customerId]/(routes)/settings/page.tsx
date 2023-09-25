@@ -16,20 +16,25 @@ const SettingsPage: React.FC<SettingsPageProps> = async ({ params }) => {
     redirect("/sign-in");
   }
 
-  const customer = await prismadb.customer.findFirst({
+  const customerSettings = await prismadb.customer.findFirst({
     where: {
       id: params.customerId,
       userId,
     },
+    select: {
+      name: true,
+      address: true,
+      vehicles: true
+    }
   });
 
-  if (!customer) {
+  if (!customerSettings) {
     redirect("/auth");
   }
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <SettingsForm/>
+        <SettingsForm initialSettings={customerSettings}/>
       </div>
     </div>
   );

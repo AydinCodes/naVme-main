@@ -7,7 +7,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { JobObject, useJobs } from "@/hooks/useJobs";
+import { JobObject } from "@/hooks/useJobs";
 import { au } from "@/lib/coordinates";
 import { useRef, useState } from "react";
 import usePlacesAutocomplete, {
@@ -18,12 +18,14 @@ const country = au;
 
 interface GooglePlacesSearchProps {
   handleSelected: any;
-  className: string;
+  className?: string;
+  placeholder: string
 }
 
 const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
   handleSelected,
   className,
+  placeholder
 }) => {
   const [showResults, setShowResults] = useState(false);
   const itemSelectedRef = useRef(false);
@@ -77,7 +79,7 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
         className="border"
       >
         <CommandInput
-          placeholder="Type an address."
+          placeholder={placeholder}
           value={value}
           onValueChange={(e) => setValue(e)}
           disabled={!ready}

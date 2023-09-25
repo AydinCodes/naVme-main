@@ -1,11 +1,19 @@
 "use client";
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { CheckSquare, Edit, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { JobObject, useJobs } from "@/hooks/useJobs";
-import GooglePlacesSearch from "./google-places-search";
+import GooglePlacesSearch from "@/components/google-places-search";
 
 interface EditDialogProps {
   jobId: string;
@@ -80,12 +88,17 @@ const EditDialog: React.FC<EditDialogProps> = ({ jobId }) => {
             <Label className="text-right font-bold">Address:</Label>
             <div className="relative w-[80%] h-[2rem] flex items-center">
               {!editAddress ? (
-                <Label>{newJobDetails.address.length > 0 ? newJobDetails.address : address}</Label>
+                <Label>
+                  {newJobDetails.address.length > 0
+                    ? newJobDetails.address
+                    : address}
+                </Label>
               ) : (
                 <div className="absolute left-0 top-[-0.4rem] w-[100%]">
                   <GooglePlacesSearch
                     className="z-[2]"
                     handleSelected={handleSelect}
+                    placeholder="Type an address."
                   />
                 </div>
               )}

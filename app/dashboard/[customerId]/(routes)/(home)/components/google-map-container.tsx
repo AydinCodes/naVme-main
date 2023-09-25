@@ -13,7 +13,7 @@ const GoogleMapContainer: React.FC<GoogleMapContainerProps> = ({ jobs }) => {
 
   return (
     <GoogleMap
-      zoom={10}
+      zoom={13}
       center={center}
       mapContainerClassName="w-[60%] rounded-[0.5rem]"
     >
