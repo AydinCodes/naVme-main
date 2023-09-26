@@ -19,6 +19,7 @@ import { useLoadScript } from "@react-google-maps/api";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useParams } from "next/navigation";
+import GoogleMapSettings from "./google-map-settings";
 
 const formSchema = z.object({
   name: z
@@ -62,15 +63,14 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
     resolver: zodResolver(formSchema),
     defaultValues: initialSettings,
   });
-  
+
   const { register, handleSubmit } = form;
-  
 
   const onSubmit = async (data: SettingsFormValues) => {
     try {
       setLoading(true);
-        console.log(typeof(data.vehicles))
-      
+      console.log(typeof data.vehicles);
+
       let newData = {
         name: data.name,
         vehicles: data.vehicles,
@@ -107,12 +107,14 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
     libraries: ["places"],
   });
 
+  
+
   return (
-    <div>
+    <div className="flex justify-between h-[85vh]">
       <Form {...form}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <FormField
+        <form className="w-[38%] h-[100%] relative flex flex-col space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <div className="space-y-5">
+            <FormField 
               control={form.control}
               name="name"
               render={({ field }) => (
@@ -146,35 +148,35 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
               <div>Loading...</div>
             )}
 
-<FormField
-  control={form.control}
-  name="vehicles"
-  render={() => (
-    <FormItem>
-      <FormLabel>Vehicles</FormLabel>
-      <FormControl>
-        <Input
-          type="number"
-          {...register('vehicles', { valueAsNumber: true })}
-          min={1}
-          max={30}
-          autoComplete="off"
-          disabled={loading}
-          maxLength={64}
-          placeholder="Enter the number of vehicles you are operating with."
-        />
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
-
+            <FormField
+              control={form.control}
+              name="vehicles"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Vehicles</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      {...register("vehicles", { valueAsNumber: true })}
+                      min={1}
+                      max={30}
+                      autoComplete="off"
+                      disabled={loading}
+                      maxLength={64}
+                      placeholder="Enter the number of vehicles you are operating with."
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
           <Button disabled={loading} type="submit">
             Save
           </Button>
         </form>
       </Form>
+      {isLoaded ? <GoogleMapSettings /> : <div>Loading...</div>}
     </div>
   );
 };
