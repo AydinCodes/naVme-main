@@ -25,7 +25,7 @@ const MapWithJobs = () => {
 
   return (
     <div className="flex justify-between h-[85vh]">
-      <div className="w-[38%] h-[100%] relative flex flex-col justify-between">
+      <div className="w-[43%] h-[100%] relative flex flex-col justify-between">
         <GooglePlacesSearch
           className="w-[100%] z-[2]"
           handleSelected={handleSelect}
