@@ -12,14 +12,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GooglePlacesSearch from "@/components/google-places-search";
 import { JobObject } from "@/hooks/useJobs";
 import { useLoadScript } from "@react-google-maps/api";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { useParams } from "next/navigation";
-import GoogleMapSettings from "./google-map-settings";
+import { useParams, useRouter } from "next/navigation";
+import { Label } from "@/components/ui/label";
+import { CheckSquare, Edit } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   name: z
@@ -46,9 +49,13 @@ interface NewAddressDetails
 
 const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
   const params = useParams();
+  const router = useRouter();
+  const { toast } = useToast()
 
   const [loading, setLoading] = useState(false);
   const [editAddress, setEditAddress] = useState(false);
+  const [addressError, setAddressError] = useState(false);
+  const [displayAddress, setDisplayAddress] = useState("");
   const [newAddressDetails, setNewAddressDetails] = useState<NewAddressDetails>(
     {
       address: "",
@@ -59,6 +66,15 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
     }
   );
 
+  useEffect(() => {
+    if (initialSettings.address.length > 0) {
+      setEditAddress(false);
+      setDisplayAddress(initialSettings.address);
+    } else {
+      setEditAddress(true);
+    }
+  }, [initialSettings]);
+
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialSettings,
@@ -67,27 +83,44 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
   const { register, handleSubmit } = form;
 
   const onSubmit = async (data: SettingsFormValues) => {
-    try {
-      setLoading(true);
-      console.log(typeof data.vehicles);
+    if (displayAddress.length > 0) {
+      try {
+        setLoading(true);
+        console.log(typeof data.vehicles);
 
-      let newData = {
-        name: data.name,
-        vehicles: data.vehicles,
-      };
-
-      if (newAddressDetails.address.length > 0) {
-        newData = {
-          ...newData,
-          ...newAddressDetails,
+        let newData = {
+          name: data.name,
+          vehicles: data.vehicles,
         };
-      }
 
-      await axios.patch(`/api/${params.customerId}/settings`, newData);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+        if (newAddressDetails.address.length > 0) {
+          newData = {
+            ...newData,
+            ...newAddressDetails,
+          };
+        }
+
+        await axios.patch(`/api/${params.customerId}/settings`, newData);
+
+        router.refresh();
+
+        toast({
+          variant: "default",
+          title: "Awesome!",
+          description: "Your settings have been updated.",
+        });
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh.",
+          description: "Something went wrong.",
+        });
+      } finally {
+        setLoading(false);
+        
+      }
+    } else {
+      setAddressError(true);
     }
   };
 
@@ -99,7 +132,9 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
       lat: selectedAddress.lat,
       lng: selectedAddress.lng,
     });
+    setDisplayAddress(selectedAddress.address);
     setEditAddress(false);
+    setAddressError(false)
   };
 
   const { isLoaded } = useLoadScript({
@@ -107,19 +142,20 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
     libraries: ["places"],
   });
 
-  
-
   return (
-    <div className="flex justify-between h-[85vh]">
+    <div className="h-[85vh]">
       <Form {...form}>
-        <form className="w-[38%] h-[100%] relative flex flex-col space-y-6" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="h-[100%] relative flex flex-col space-y-6"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="space-y-5">
-            <FormField 
+            <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel className="font-bold">Name</FormLabel>
                   <FormControl>
                     <Input
                       autoComplete="off"
@@ -133,27 +169,13 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
                 </FormItem>
               )}
             />
-            {isLoaded ? (
-              <FormItem>
-                <FormLabel>Address</FormLabel>
-                <FormControl>
-                  <GooglePlacesSearch
-                    handleSelected={handleSelect}
-                    placeholder="Enter origin address."
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            ) : (
-              <div>Loading...</div>
-            )}
 
             <FormField
               control={form.control}
               name="vehicles"
               render={() => (
                 <FormItem>
-                  <FormLabel>Vehicles</FormLabel>
+                  <FormLabel className="font-bold">Vehicles</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -170,13 +192,57 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
                 </FormItem>
               )}
             />
+
+            <FormItem className="relative">
+            <FormLabel className={cn('font-bold', addressError ? 'text-destructive' : '')}>Address</FormLabel>
+
+              <div className="flex justify-between">
+                <FormControl className="w-[95%]">
+                  {editAddress ? (
+                    isLoaded ? (
+                      <GooglePlacesSearch
+                        className="z-[2] relative"
+                        handleSelected={handleSelect}
+                        placeholder="Enter origin address."
+                      />
+                    ) : (
+                      <div>Loading...</div>
+                    )
+                  ) : (
+                    <Label>{displayAddress}</Label>
+                  )}
+                </FormControl>
+                <Button
+                  className="relative top-1"
+                  disabled={displayAddress.length === 0}
+                  onClick={() => setEditAddress(!editAddress)}
+                  size={"icon"}
+                  variant={"ghost"}
+                  type="button"
+                >
+                  {editAddress === true ? <CheckSquare /> : <Edit />}
+                </Button>
+              </div>
+              {addressError && (
+                <p
+                  className={
+                    "text-sm font-medium text-destructive z-[1] absolute top-[5rem] left-0"
+                  }
+                >
+                  Please enter an address before saving.
+                </p>
+              )}
+            </FormItem>
           </div>
-          <Button disabled={loading} type="submit">
+          <Button
+            className="absolute bottom-0 right-0"
+            disabled={loading}
+            type="submit"
+          >
             Save
           </Button>
         </form>
       </Form>
-      {isLoaded ? <GoogleMapSettings /> : <div>Loading...</div>}
     </div>
   );
 };
