@@ -7,9 +7,9 @@ import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
 import { useMemo } from "react";
 import { LatLng } from "use-places-autocomplete";
 
-type Origin = {
-  lat: LatLng | LatLngLiteral | undefined;
-  lng: LatLng | LatLngLiteral | undefined;
+interface Origin {
+  lat: number
+  lng: number
 };
 
 interface MapWithJobsProps {
@@ -18,9 +18,7 @@ interface MapWithJobsProps {
 
 const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
   const center =
-    useMemo(() => ({ lat: origin.lat, lng: origin.lng }), []) ||
-    useMemo(() => ({ lat: -37.8176665, lng: 144.9672122 }), []);
-
+    useMemo(() => ({ lat: origin.lat, lng: origin.lng }), [origin.lat, origin.lng])
   const { addJob, jobs } = useJobs();
 
   const handleSelect = (selectedJob: JobObject) => {
@@ -47,13 +45,15 @@ const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
         <JobList jobs={jobs} className="absolute bottom-0 z-[1]" />
       </div>
       <GoogleMap
-        zoom={10}
+        zoom={15}
         center={center}
         mapContainerClassName="w-[55%] rounded-[0.5rem]"
       >
         {jobs.map((job) => (
           <Marker key={job.jobId} position={{ lat: job.lat, lng: job.lng }} />
         ))}
+      {/* <Marker position={{ lat: origin.lat, lng: origin.lng }} /> */}
+
       </GoogleMap>
     </div>
   );

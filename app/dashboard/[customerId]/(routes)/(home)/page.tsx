@@ -23,13 +23,16 @@ const HomePage: React.FC<HomePageProps> = async ({ params }) => {
     },
   });
 
-  const origin = {
-    lat: customer?.lat,
-    lng: customer?.lng
-  }
+  
+ 
 
   if (!customer) {
     redirect("/auth");
+  } else {
+    var origin = {
+      lat: customer.lat,
+      lng: customer.lng
+    }
   }
   return (
     <div className="flex-col">
