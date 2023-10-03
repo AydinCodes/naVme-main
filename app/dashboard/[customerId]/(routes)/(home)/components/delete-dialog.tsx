@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { useJobs } from "@/hooks/useJobs";
+import { useJobs } from "@/hooks/use-jobs";
 import { Trash2 } from "lucide-react";
 
 interface DeleteDialogProps {

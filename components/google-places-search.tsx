@@ -7,7 +7,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { JobObject } from "@/hooks/useJobs";
+import { JobObject } from "@/hooks/use-jobs";
 import { au } from "@/lib/coordinates";
 import { useRef, useState } from "react";
 import usePlacesAutocomplete, {

@@ -1,7 +1,7 @@
 "use client";
 
 import { Label } from "@/components/ui/label";
-import { JobObject, useJobs } from "@/hooks/useJobs";
+import { JobObject, useJobs } from "@/hooks/use-jobs";
 
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";

@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import GooglePlacesSearch from "@/components/google-places-search";
-import { JobObject } from "@/hooks/useJobs";
+import { JobObject } from "@/hooks/use-jobs";
 import { useLoadScript } from "@react-google-maps/api";
 import { Button } from "@/components/ui/button";
 import axios from "axios";

@@ -12,7 +12,7 @@ import {
 import { CheckSquare, Edit, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { JobObject, useJobs } from "@/hooks/useJobs";
+import { JobObject, useJobs } from "@/hooks/use-jobs";
 import GooglePlacesSearch from "@/components/google-places-search";
 
 interface EditDialogProps {
