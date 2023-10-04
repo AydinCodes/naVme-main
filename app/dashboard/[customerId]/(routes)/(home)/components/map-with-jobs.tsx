@@ -53,7 +53,7 @@ const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
           <Marker key={job.jobId} position={{ lat: job.lat, lng: job.lng }} />
         ))}
       {/* <Marker position={{ lat: origin.lat, lng: origin.lng }} /> */}
-
+          {/* testing commit */}
       </GoogleMap>
     </div>
   );
