@@ -60,7 +60,6 @@ const EditDialog: React.FC<EditDialogProps> = ({ jobId }) => {
   };
 
   const handleSelect = (selectedJob: JobObject) => {
-    console.log(selectedJob);
     setNewJobDetails({
       address: selectedJob.address,
       placeId: selectedJob.placeId,

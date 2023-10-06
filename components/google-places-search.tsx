@@ -103,7 +103,6 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
               <CommandItem
                 onSelect={() => {
                   itemSelectedRef.current = true;
-                  console.log(terms)
                   const suburb = terms[2].value;
                   const state = terms[3].value;
                   const country = terms[4].value;

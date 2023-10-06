@@ -89,7 +89,6 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
     if (displayAddress.length > 0) {
       try {
         setLoading(true);
-        console.log(typeof data.vehicles);
 
         let newData = {
           name: data.name,

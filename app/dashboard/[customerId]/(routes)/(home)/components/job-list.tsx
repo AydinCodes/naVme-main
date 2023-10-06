@@ -11,19 +11,19 @@ import EditDialog from "./edit-dialog";
 
 interface JobListProps {
   className?: string;
-  jobs?: JobObject[]
+  jobs?: JobObject[];
 }
 
-const JobList: React.FC<JobListProps> = ({ className, jobs }) => {
-
+const JobList: React.FC<JobListProps> = ({ className, jobs}) => {
   return (
     <div className={cn(className, "w-[100%] h-[87%]")}>
+      <Label className="absolute right-0 top-[-2.2rem] text-secondary-foreground">Total Jobs: {jobs?.length}</Label>
       <ScrollArea className="h-[100%]">
         <div className="flex flex-col space-y-[2rem] pr-6">
           {jobs?.map((job) => (
             <div
               key={job.jobId}
-              className="flex items-center justify-between border rounded-[.5rem] p-4"
+              className={cn("flex items-center justify-between border rounded-[.5rem] p-4 transition-all")}
             >
               <Label className="mr-4">{job.address}</Label>
               <div className="space-x-2">
@@ -37,7 +37,5 @@ const JobList: React.FC<JobListProps> = ({ className, jobs }) => {
     </div>
   );
 };
-
-
 
 export default JobList;

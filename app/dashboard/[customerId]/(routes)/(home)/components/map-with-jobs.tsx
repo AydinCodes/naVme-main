@@ -4,8 +4,7 @@ import GooglePlacesSearch from "@/components/google-places-search";
 import JobList from "./job-list";
 import { JobObject, useJobs } from "@/hooks/use-jobs";
 import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
-import { useMemo } from "react";
-import nxtIcon from "../../../../../../public/next.svg"
+import { useMemo, useState } from "react";
 
 interface Origin {
   lat: number;
@@ -15,11 +14,11 @@ interface Origin {
 interface MapWithJobsProps {
   origin: Origin;
 }
-const libraries: ("places" | "geometry" | "drawing" | "visualization")[] = ["places"];
-
+const libraries: ("places" | "geometry" | "drawing" | "visualization")[] = [
+  "places",
+];
 
 const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
-
 
   const center = useMemo(
     () => ({ lat: origin.lat, lng: origin.lng }),
@@ -49,7 +48,10 @@ const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
           handleSelected={handleSelect}
           placeholder="Type an address."
         />
-        <JobList jobs={jobs} className="absolute bottom-0 z-[1]" />
+        <JobList
+          jobs={jobs}
+          className="absolute bottom-0 z-[1]"
+        />
       </div>
       <GoogleMap
         zoom={10}
@@ -57,13 +59,23 @@ const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
         mapContainerClassName="w-[55%] rounded-[0.5rem]"
       >
         {jobs.map((job) => (
-          <MarkerF key={job.jobId} position={{ lat: job.lat, lng: job.lng }} icon={{url: "/red.svg", scaledSize: new window.google.maps.Size(40, 40)}} zIndex={1000}/>
+          <MarkerF
+            key={job.jobId}
+            position={{ lat: job.lat, lng: job.lng }}
+            icon={{
+              url: "/red.svg",
+              scaledSize: new window.google.maps.Size(40, 40),
+            }}
+            zIndex={1000}
+          />
         ))}
         <MarkerF
           key={"origin"}
-          onClick={() => console.log("origin clicked")}
           position={center}
-          icon={{url: "/green.svg", scaledSize: new window.google.maps.Size(45, 45)}}
+          icon={{
+            url: "/green.svg",
+            scaledSize: new window.google.maps.Size(45, 45),
+          }}
         />
       </GoogleMap>
     </div>
@@ -71,5 +83,3 @@ const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
 };
 
 export default MapWithJobs;
-
-
