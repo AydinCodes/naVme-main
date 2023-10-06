@@ -47,6 +47,9 @@ interface SettingsFormProps {
 interface NewAddressDetails
   extends Omit<JobObject, "jobId" | "placeId" | "suburb"> {}
 
+
+  const libraries: ("places" | "geometry" | "drawing" | "visualization")[] = ["places"];
+
 const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
   const params = useParams();
   const router = useRouter();
@@ -139,7 +142,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
-    libraries: ["places"],
+    libraries: libraries,
   });
 
   return (
