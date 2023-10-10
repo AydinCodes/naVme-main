@@ -5,6 +5,7 @@ import JobList from "./job-list";
 import { JobObject, useJobs } from "@/hooks/use-jobs";
 import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
 import { useMemo, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 interface Origin {
   lat: number;
@@ -48,6 +49,7 @@ const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
           handleSelected={handleSelect}
           placeholder="Type an address."
         />
+        
         <JobList
           jobs={jobs}
           className="absolute bottom-0 z-[1]"
