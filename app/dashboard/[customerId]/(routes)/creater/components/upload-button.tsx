@@ -29,11 +29,12 @@ const UploadButton: React.FC<UploadButtonProps> = () => {
               `/api/${params.customerId}/format-jobs`,
               jobsArray
             );
-            const formattedJobs = formatJobs.data;
+            const formattedJobs = await formatJobs.data;
 
             formattedJobs.map((job: JobObject) => addJob(job));
           } catch (error) {
             console.error('Error parsing JSON file content:', error);
+            console.log("failed in upload-button")
           }
         };
 
