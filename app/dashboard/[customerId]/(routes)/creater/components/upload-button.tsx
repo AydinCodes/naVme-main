@@ -35,15 +35,17 @@ const UploadButton: React.FC<UploadButtonProps> = () => {
             formattedJobs.map((job: JobObject) => addJob(job));
           } catch (error) {
             console.error('Error parsing JSON file content:', error);
+          } finally {
+            setLoading(false);
           }
         };
 
         reader.readAsText(file);
       } else {
         console.log('Unsupported file type. Only JSON files are allowed.');
+        setLoading(false);
       }
     }
-    setLoading(false);
   }
 
   return (
