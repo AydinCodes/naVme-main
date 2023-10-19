@@ -9,7 +9,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import DeleteDialog from './delete-dialog';
 import EditDialog from './edit-dialog';
 import { Button } from '@/components/ui/button';
-import { Upload } from 'lucide-react';
 import UploadButton from "./upload-button";
 
 interface JobListProps {

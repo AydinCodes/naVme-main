@@ -1,19 +1,19 @@
-"use client";
-import { v4 as uuidv4 } from "uuid";
+'use client';
+import { v4 as uuidv4 } from 'uuid';
 import {
   Command,
   CommandEmpty,
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import { JobObject } from "@/hooks/use-jobs";
-import { au } from "@/lib/coordinates";
-import { useRef, useState } from "react";
+} from '@/components/ui/command';
+import { JobObject } from '@/hooks/use-jobs';
+import { au } from '@/lib/coordinates';
+import { useRef, useState } from 'react';
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
-} from "use-places-autocomplete";
+} from 'use-places-autocomplete';
 const country = au;
 
 interface GooglePlacesSearchProps {
@@ -38,9 +38,9 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
     clearSuggestions,
   } = usePlacesAutocomplete({
     requestOptions: {
-      types: ["address"],
+      types: ['address'],
       componentRestrictions: {
-        country: "au",
+        country: 'au',
       },
       locationRestriction: country.vic,
     },
@@ -49,27 +49,39 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
   const handleSelect = async (
     address: string,
     place_id: string,
-    suburb: string,
-    state: string,
-    country: string
+    terms: google.maps.places.PredictionTerm[]
   ) => {
     setShowResults(false);
     const results = await getGeocode({ address });
     const { lat, lng } = await getLatLng(results[0]);
     const jobId = uuidv4();
-    const selectedJob: JobObject = {
-      jobId: jobId,
-      address: address,
-      suburb: suburb,
-      state: state,
-      country: country,
-      placeId: place_id,
-      lat,
-      lng,
-    };
+    if (terms.length === 5) {
+      const selectedJob: JobObject = {
+        jobId: jobId,
+        address: address,
+        suburb: terms[2].value,
+        state: terms[3].value,
+        country: terms[4].value,
+        placeId: place_id,
+        lat,
+        lng,
+      };
+      handleSelected(selectedJob);
+    } else if (terms.length === 4) {
+      const selectedJob: JobObject = {
+        jobId: jobId,
+        address: address,
+        suburb: terms[1].value,
+        state: terms[2].value,
+        country: terms[3].value,
+        placeId: place_id,
+        lat,
+        lng,
+      };
+      handleSelected(selectedJob);
+    }
 
-    handleSelected(selectedJob);
-    setValue("", false);
+    setValue('', false);
     clearSuggestions();
   };
 
@@ -97,16 +109,13 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
 
         <CommandList className="bg-white dark:bg-slate-950">
           <CommandEmpty hidden={!showResults}>No results found.</CommandEmpty>
-          {status === "OK" &&
+          {status === 'OK' &&
             showResults &&
             data.map(({ place_id, description, terms }) => (
               <CommandItem
                 onSelect={() => {
                   itemSelectedRef.current = true;
-                  const suburb = terms[2].value;
-                  const state = terms[3].value;
-                  const country = terms[4].value;
-                  handleSelect(description, place_id, suburb, state, country);
+                  handleSelect(description, place_id, terms);
                 }}
                 key={place_id}
               >
