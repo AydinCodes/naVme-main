@@ -4,17 +4,19 @@ import { NextResponse } from 'next/server';
 import { Client, GeocodeResult } from '@googlemaps/google-maps-services-js';
 import { JobObject, UploadedJobObject } from '@/hooks/use-jobs';
 
-const api_key: string = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
+if (process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
+  var api_key: string = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+} else {
+  console.log('format-jobs-api: Google API Key not found.');
+}
 
 const client = new Client({});
 
 const formatJobDetails = async (uploadedJobs: UploadedJobObject[]) => {
   const formattedJobs: JobObject[] = [];
 
-
   await Promise.all(
     uploadedJobs.map(async (uploadedJob) => {
-      
       try {
         const r = await client.geocode({
           params: {
@@ -24,8 +26,12 @@ const formatJobDetails = async (uploadedJobs: UploadedJobObject[]) => {
           timeout: 1000,
         });
 
-
-        if (r.data && r.data.results && r.data.results[0] && /^\d/.test(r.data.results[0].formatted_address)) {
+        if (
+          r.data &&
+          r.data.results &&
+          r.data.results[0] &&
+          /^\d/.test(r.data.results[0].formatted_address)
+        ) {
           const placeId = r.data.results[0].place_id;
           const address = r.data.results[0].formatted_address;
           const suburb = r.data.results[0].address_components[2].short_name;
@@ -49,11 +55,11 @@ const formatJobDetails = async (uploadedJobs: UploadedJobObject[]) => {
           formattedJobs.push({
             customerName: uploadedJob.customer_name,
             jobId: uploadedJob.id,
-            placeId: "",
+            placeId: '',
             address: uploadedJob.address,
-            suburb: "Address not found",
-            state: "",
-            country: "",
+            suburb: 'Address not found',
+            state: '',
+            country: '',
             lat: 0,
             lng: 0,
           });
@@ -65,7 +71,6 @@ const formatJobDetails = async (uploadedJobs: UploadedJobObject[]) => {
   );
   return formattedJobs;
 };
-
 
 export async function POST(
   req: Request,
