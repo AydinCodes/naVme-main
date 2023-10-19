@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
   FormControl,
@@ -10,25 +10,26 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
-import GooglePlacesSearch from "@/components/google-places-search";
-import { JobObject } from "@/hooks/use-jobs";
-import { useLoadScript } from "@react-google-maps/api";
-import { Button } from "@/components/ui/button";
-import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
-import { Label } from "@/components/ui/label";
-import { CheckSquare, Edit } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { useEffect, useState } from 'react';
+import GooglePlacesSearch from '@/components/google-places-search';
+import { JobObject } from '@/hooks/use-jobs';
+import { useLoadScript } from '@react-google-maps/api';
+import { Button } from '@/components/ui/button';
+import axios from 'axios';
+import { useParams, useRouter } from 'next/navigation';
+import { Label } from '@/components/ui/label';
+import { CheckSquare, Edit } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
+import Loading from '@/components/loading';
 
 const formSchema = z.object({
   name: z
     .string()
-    .min(3, "Your name is too short. Please enter a valid name.")
-    .max(50, "Your name is too long. Please enter a valid name."),
+    .min(3, 'Your name is too short. Please enter a valid name.')
+    .max(50, 'Your name is too long. Please enter a valid name.'),
   vehicles: z.number().int().gte(1).lte(30),
 });
 
@@ -45,25 +46,26 @@ interface SettingsFormProps {
 }
 
 interface NewAddressDetails
-  extends Omit<JobObject, "jobId" | "placeId" | "suburb"> {}
+  extends Omit<JobObject, 'jobId' | 'placeId' | 'suburb'> {}
 
-
-  const libraries: ("places" | "geometry" | "drawing" | "visualization")[] = ["places"];
+const libraries: ('places' | 'geometry' | 'drawing' | 'visualization')[] = [
+  'places',
+];
 
 const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
   const params = useParams();
   const router = useRouter();
-  const { toast } = useToast()
+  const { toast } = useToast();
 
   const [loading, setLoading] = useState(false);
   const [editAddress, setEditAddress] = useState(false);
   const [addressError, setAddressError] = useState(false);
-  const [displayAddress, setDisplayAddress] = useState("");
+  const [displayAddress, setDisplayAddress] = useState('');
   const [newAddressDetails, setNewAddressDetails] = useState<NewAddressDetails>(
     {
-      address: "",
-      state: "",
-      country: "",
+      address: '',
+      state: '',
+      country: '',
       lat: 0,
       lng: 0,
     }
@@ -107,19 +109,18 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
         router.refresh();
 
         toast({
-          variant: "default",
-          title: "Awesome!",
-          description: "Your settings have been updated.",
+          variant: 'default',
+          title: 'Awesome!',
+          description: 'Your settings have been updated.',
         });
       } catch (error) {
         toast({
-          variant: "destructive",
-          title: "Uh oh.",
-          description: "Something went wrong.",
+          variant: 'destructive',
+          title: 'Uh oh.',
+          description: 'Something went wrong.',
         });
       } finally {
         setLoading(false);
-        
       }
     } else {
       setAddressError(true);
@@ -136,7 +137,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
     });
     setDisplayAddress(selectedAddress.address);
     setEditAddress(false);
-    setAddressError(false)
+    setAddressError(false);
   };
 
   const { isLoaded } = useLoadScript({
@@ -181,7 +182,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
                   <FormControl>
                     <Input
                       type="number"
-                      {...register("vehicles", { valueAsNumber: true })}
+                      {...register('vehicles', { valueAsNumber: true })}
                       min={1}
                       max={30}
                       autoComplete="off"
@@ -196,7 +197,14 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
             />
 
             <FormItem className="relative">
-            <FormLabel className={cn('font-bold', addressError ? 'text-destructive' : '')}>Address</FormLabel>
+              <FormLabel
+                className={cn(
+                  'font-bold',
+                  addressError ? 'text-destructive' : ''
+                )}
+              >
+                Address
+              </FormLabel>
 
               <div className="flex justify-between">
                 <FormControl className="w-[95%]">
@@ -208,7 +216,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
                         placeholder="Enter origin address."
                       />
                     ) : (
-                      <div>Loading...</div>
+                      <Loading />
                     )
                   ) : (
                     <Label>{displayAddress}</Label>
@@ -218,8 +226,8 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
                   className="relative top-1"
                   disabled={displayAddress.length === 0}
                   onClick={() => setEditAddress(!editAddress)}
-                  size={"icon"}
-                  variant={"ghost"}
+                  size={'icon'}
+                  variant={'ghost'}
                   type="button"
                 >
                   {editAddress === true ? <CheckSquare /> : <Edit />}
@@ -228,7 +236,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
               {addressError && (
                 <p
                   className={
-                    "text-sm font-medium text-destructive z-[1] absolute top-[5rem] left-0"
+                    'text-sm font-medium text-destructive z-[1] absolute top-[5rem] left-0'
                   }
                 >
                   Please enter an address before saving.

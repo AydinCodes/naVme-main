@@ -6,16 +6,17 @@ import { UploadedJobObject, JobObject, useJobs } from '@/hooks/use-jobs';
 import { au } from '@/lib/coordinates';
 import axios from 'axios';
 import { useParams } from 'next/navigation';
-
-const country = au;
+import { useLoading } from '@/hooks/use-loading';
 
 interface UploadButtonProps {}
 
 const UploadButton: React.FC<UploadButtonProps> = () => {
   const params = useParams();
   const { addJob } = useJobs();
+  const { setLoading } = useLoading();
 
   function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    setLoading(true);
     const file = event.target.files?.[0];
     if (file) {
       if (file.type === 'application/json') {
@@ -34,7 +35,6 @@ const UploadButton: React.FC<UploadButtonProps> = () => {
             formattedJobs.map((job: JobObject) => addJob(job));
           } catch (error) {
             console.error('Error parsing JSON file content:', error);
-            console.log("failed in upload-button")
           }
         };
 
@@ -43,6 +43,7 @@ const UploadButton: React.FC<UploadButtonProps> = () => {
         console.log('Unsupported file type. Only JSON files are allowed.');
       }
     }
+    setLoading(false);
   }
 
   return (

@@ -6,6 +6,7 @@ import { JobObject, useJobs } from "@/hooks/use-jobs";
 import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import Loading from "@/components/loading";
 
 interface Origin {
   lat: number;
@@ -37,7 +38,7 @@ const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
   });
 
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    return <Loading />
   }
 
 

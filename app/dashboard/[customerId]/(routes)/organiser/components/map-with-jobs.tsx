@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
-import GooglePlacesSearch from "@/components/google-places-search";
-import JobList from "./job-list";
-import { JobObject, useJobs } from "@/hooks/use-jobs";
-import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
-import { useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
+import GooglePlacesSearch from '@/components/google-places-search';
+import JobList from './job-list';
+import { JobObject, useJobs } from '@/hooks/use-jobs';
+import { GoogleMap, MarkerF, useLoadScript } from '@react-google-maps/api';
+import { useMemo, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import Loading from '@/components/loading';
 
 interface Origin {
   lat: number;
@@ -15,12 +16,11 @@ interface Origin {
 interface MapWithJobsProps {
   origin: Origin;
 }
-const libraries: ("places" | "geometry" | "drawing" | "visualization")[] = [
-  "places",
+const libraries: ('places' | 'geometry' | 'drawing' | 'visualization')[] = [
+  'places',
 ];
 
 const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
-
   const center = useMemo(
     () => ({ lat: origin.lat, lng: origin.lng }),
     [origin.lat, origin.lng]
@@ -37,9 +37,8 @@ const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
   });
 
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
-
 
   return (
     <div className="flex justify-between h-[85vh]">
@@ -49,11 +48,8 @@ const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
           handleSelected={handleSelect}
           placeholder="Type an address."
         />
-        
-        <JobList
-          jobs={jobs}
-          className="absolute bottom-0 z-[1]"
-        />
+
+        <JobList jobs={jobs} className="absolute bottom-0 z-[1]" />
       </div>
       <GoogleMap
         zoom={10}
@@ -65,17 +61,17 @@ const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
             key={job.jobId}
             position={{ lat: job.lat, lng: job.lng }}
             icon={{
-              url: "/red.svg",
+              url: '/red.svg',
               scaledSize: new window.google.maps.Size(40, 40),
             }}
             zIndex={1000}
           />
         ))}
         <MarkerF
-          key={"origin"}
+          key={'origin'}
           position={center}
           icon={{
-            url: "/green.svg",
+            url: '/green.svg',
             scaledSize: new window.google.maps.Size(45, 45),
           }}
         />
