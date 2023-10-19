@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.25.6",
+    "@googlemaps/google-maps-services-js": "^3.3.41",
     "@hookform/resolvers": "^3.3.2",
     "@prisma/client": "^5.4.2",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -50,6 +51,7 @@
     "zustand": "^4.4.3"
   },
   "devDependencies": {
+    "@types/google.maps": "^3.54.4",
     "@types/http-errors": "^2.0.3",
     "@types/uuid": "^9.0.6",
     "prisma": "^5.4.2"

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 export interface JobObject {
+  customerName?: string;
   jobId: string;
   address: string;
   suburb: string;
@@ -13,7 +14,7 @@ export interface JobObject {
 
 export interface UploadedJobObject {
   id: string;
-  customerName: string;
+  customer_name: string;
   address: string;
 }
 

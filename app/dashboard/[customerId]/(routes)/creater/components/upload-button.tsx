@@ -3,10 +3,17 @@ import { Label } from '@/components/ui/label';
 import { Upload } from 'lucide-react';
 import './styles.scss';
 import { UploadedJobObject, JobObject, useJobs } from '@/hooks/use-jobs';
+import { au } from '@/lib/coordinates';
+import axios from 'axios';
+import { useParams } from 'next/navigation';
+
+const country = au;
 
 interface UploadButtonProps {}
 
 const UploadButton: React.FC<UploadButtonProps> = () => {
+
+    const params = useParams();
   const { addJob } = useJobs();
 
   function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
@@ -15,24 +22,29 @@ const UploadButton: React.FC<UploadButtonProps> = () => {
       if (file.type === 'application/json') {
         const reader = new FileReader();
 
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
           const uploadedJobs = e.target?.result ?? '';
           try {
-            const jobArray = JSON.parse(uploadedJobs as string);
-            // Convert the uploadedJobs to the JobObject structure
-            const convertedJobs: JobObject[] = jobArray.map((uploadedJob: UploadedJobObject) => ({
-              jobId: uploadedJob.id,
-              address: uploadedJob.address,
-              suburb: '', // Add default value for missing string
-              state: '', // Add default value for missing string
-              country: '', // Add default value for missing string
-              placeId: '', // Add default value for missing string
-              lat: 0, // Add default value for missing number
-              lng: 0, // Add default value for missing number
-            }));
+            const jobsArray = JSON.parse(uploadedJobs as string);
+            await axios.post(`/api/${params.customerId}/format-jobs`, jobsArray);
+            const convertedJobs: JobObject[] = [];
+            for (let i = 0; i < jobsArray.length; i++) {
+              const uploadedJob = jobsArray[i];
+              
+              const job: JobObject = {
+                jobId: uploadedJob.id,
+                address: uploadedJob.address,
+                suburb: '', // Add default value for missing string
+                state: '', // Add default value for missing string
+                country: '', // Add default value for missing string
+                placeId: '', // Add default value for missing string
+                lat: 0, // Add default value for missing number
+                lng: 0, // Add default value for missing number
+              };
+              convertedJobs.push(job);
+            }
 
-            convertedJobs.map(job => addJob(job))
-
+            convertedJobs.map((job) => addJob(job));
           } catch (error) {
             console.error('Error parsing JSON file content:', error);
           }
