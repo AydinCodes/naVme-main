@@ -4,11 +4,7 @@ import { NextResponse } from 'next/server';
 import { Client, GeocodeResult } from '@googlemaps/google-maps-services-js';
 import { JobObject, UploadedJobObject } from '@/hooks/use-jobs';
 
-if (process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
-  var api_key: string = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-} else {
-  console.log('format-jobs-api: Google API Key not found.');
-}
+  var api_key: string = process.env.PRIVATE_GOOGLE_MAPS_API_KEY!;
 
 const client = new Client({});
 
