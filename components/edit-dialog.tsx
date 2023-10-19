@@ -19,13 +19,16 @@ interface EditDialogProps {
   jobId: string;
 }
 
-interface NewJobDetails extends Omit<JobObject, "jobId" | "suburb" | "state" | "country"> {}
 
 
 const EditDialog: React.FC<EditDialogProps> = ({ jobId }) => {
   const [editAddress, setEditAddress] = useState(false);
-  const [newJobDetails, setNewJobDetails] = useState<NewJobDetails>({
+  const [newJobDetails, setNewJobDetails] = useState<JobObject>({
     address: "",
+    suburb: "",
+    country: "",
+    jobId: "",
+    state: "",
     placeId: "",
     lat: 0,
     lng: 0,
@@ -36,6 +39,10 @@ const EditDialog: React.FC<EditDialogProps> = ({ jobId }) => {
   const handleCancel = () => {
     setNewJobDetails({
       address: "",
+      suburb: "",
+      country: "",
+      jobId: "",
+      state: "",
       placeId: "",
       lat: 0,
       lng: 0,
@@ -47,6 +54,10 @@ const EditDialog: React.FC<EditDialogProps> = ({ jobId }) => {
     if (newJobDetails.address.length > 0) {
       const updatedDetails = {
         address: newJobDetails.address,
+        state: newJobDetails.state,
+        country: newJobDetails.country,
+        jobId: jobId,
+        suburb: newJobDetails.suburb,
         placeId: newJobDetails.placeId,
         lat: newJobDetails.lat,
         lng: newJobDetails.lng,
@@ -62,6 +73,10 @@ const EditDialog: React.FC<EditDialogProps> = ({ jobId }) => {
   const handleSelect = (selectedJob: JobObject) => {
     setNewJobDetails({
       address: selectedJob.address,
+      suburb: selectedJob.suburb,
+      state: selectedJob.state,
+      country: selectedJob.country,
+      jobId: selectedJob.jobId,
       placeId: selectedJob.placeId,
       lat: selectedJob.lat,
       lng: selectedJob.lng,
