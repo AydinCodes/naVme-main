@@ -14,8 +14,18 @@ export function MainNav({
   const routes = [
     {
       href: `/dashboard/${params.customerId}`,
-      label: "Home",
+      label: "Dashboard",
       active: pathname === `/dashboard/${params.customerId}`,
+    },
+    {
+      href: `/dashboard/${params.customerId}/optimiser`,
+      label: "Optimiser",
+      active: pathname === `/dashboard/${params.customerId}/optimiser`,
+    },
+    {
+      href: `/dashboard/${params.customerId}/organiser`,
+      label: "Organiser",
+      active: pathname === `/dashboard/${params.customerId}/organiser`,
     },
     {
       href: `/dashboard/${params.customerId}/settings`,
