@@ -22,7 +22,8 @@ const JobList: React.FC<JobListProps> = ({ className, jobs }) => {
         <Label className="text-secondary-foreground">
           Total Jobs: {jobs?.length}
         </Label>
-        <Button>Organise Routes</Button>
+        <Button>Organise Runs</Button>
+        
       </div>
       <ScrollArea className="h-[92%]">
         <div className="flex flex-col space-y-[2rem] pr-6">

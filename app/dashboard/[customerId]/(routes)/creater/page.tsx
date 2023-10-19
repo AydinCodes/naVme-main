@@ -3,13 +3,13 @@ import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import MapWithJobs from "./components/map-with-jobs";
 
-interface OrganiserPageProps {
+interface CreaterPageProps {
   params: {
     customerId: string;
   };
 }
 
-const OrganiserPage: React.FC<OrganiserPageProps> = async ({ params }) => {
+const CreaterPage: React.FC<CreaterPageProps> = async ({ params }) => {
   const { userId } = auth();
 
   if (!userId) {
@@ -43,4 +43,4 @@ const OrganiserPage: React.FC<OrganiserPageProps> = async ({ params }) => {
   );
 };
 
-export default OrganiserPage;
+export default CreaterPage;

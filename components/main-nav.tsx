@@ -18,13 +18,13 @@ export function MainNav({
       active: pathname === `/dashboard/${params.customerId}`,
     },
     {
-      href: `/dashboard/${params.customerId}/optimiser`,
-      label: "Optimiser",
-      active: pathname === `/dashboard/${params.customerId}/optimiser`,
+      href: `/dashboard/${params.customerId}/creater`,
+      label: "Run Creater",
+      active: pathname === `/dashboard/${params.customerId}/creater`,
     },
     {
       href: `/dashboard/${params.customerId}/organiser`,
-      label: "Organiser",
+      label: "Run Organiser",
       active: pathname === `/dashboard/${params.customerId}/organiser`,
     },
     {
