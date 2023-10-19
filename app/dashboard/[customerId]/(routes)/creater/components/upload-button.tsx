@@ -12,8 +12,7 @@ const country = au;
 interface UploadButtonProps {}
 
 const UploadButton: React.FC<UploadButtonProps> = () => {
-
-    const params = useParams();
+  const params = useParams();
   const { addJob } = useJobs();
 
   function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
@@ -26,25 +25,13 @@ const UploadButton: React.FC<UploadButtonProps> = () => {
           const uploadedJobs = e.target?.result ?? '';
           try {
             const jobsArray = JSON.parse(uploadedJobs as string);
-            await axios.post(`/api/${params.customerId}/format-jobs`, jobsArray);
-            const convertedJobs: JobObject[] = [];
-            for (let i = 0; i < jobsArray.length; i++) {
-              const uploadedJob = jobsArray[i];
-              
-              const job: JobObject = {
-                jobId: uploadedJob.id,
-                address: uploadedJob.address,
-                suburb: '', // Add default value for missing string
-                state: '', // Add default value for missing string
-                country: '', // Add default value for missing string
-                placeId: '', // Add default value for missing string
-                lat: 0, // Add default value for missing number
-                lng: 0, // Add default value for missing number
-              };
-              convertedJobs.push(job);
-            }
+            const formatJobs = await axios.post(
+              `/api/${params.customerId}/format-jobs`,
+              jobsArray
+            );
+            const formattedJobs = formatJobs.data;
 
-            convertedJobs.map((job) => addJob(job));
+            formattedJobs.map((job: JobObject) => addJob(job));
           } catch (error) {
             console.error('Error parsing JSON file content:', error);
           }

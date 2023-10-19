@@ -21,7 +21,6 @@ export interface UploadedJobObject {
 interface JobsState {
   jobs: JobObject[];
   addJob: (newJob: JobObject) => void;
-  addUploadedJobs: (newJob: UploadedJobObject) => void;
   deleteJob: (jobId: string) => void;
   getJobById: (jobId: string) => JobObject | undefined;
   editJobById: (jobId: string, updatedJobDetails: Partial<JobObject>) => void;
@@ -33,9 +32,7 @@ export const useJobs = create<JobsState>((set, get) => ({
     set((state) => ({
       jobs: [...state.jobs, newJob],
     })),
-    addUploadedJobs: (newJobs: UploadedJobObject) => (
-      console.log("usejobs: ", newJobs)
-    ),
+    
   deleteJob: (jobId: string) =>
     set((state) => ({
       jobs: state.jobs.filter((job) => job.jobId !== jobId),

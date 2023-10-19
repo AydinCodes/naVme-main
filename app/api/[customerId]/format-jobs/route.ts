@@ -93,8 +93,7 @@ export async function POST(
 
     const formattedJobDetails = await formatJobDetails(body);
 
-    console.log(formattedJobDetails);
-    return NextResponse.json(body);
+    return NextResponse.json(formattedJobDetails);
   } catch (error) {
     console.log('[FORMAT-POST]', error);
     return new NextResponse('Internal Error', { status: 500 });
