@@ -10,7 +10,7 @@ import DeleteDialog from './delete-dialog';
 import EditDialog from './edit-dialog';
 import { Button } from '@/components/ui/button';
 import UploadButton from './upload-button';
-import Loading from '@/components/loading';
+import { Loading } from '@/components/loading';
 import { useLoading } from '@/hooks/use-loading';
 
 interface JobListProps {
@@ -33,8 +33,9 @@ const JobList: React.FC<JobListProps> = ({ className, jobs }) => {
         </div>
       </div>
       {loading ? (
-        <div className='flex justify-center mt-[4rem]'>
-        <Loading /></div>
+        <div className="flex justify-center mt-[4rem]">
+          <Loading />
+        </div>
       ) : (
         <ScrollArea className="h-[92%]">
           <div className="flex flex-col space-y-[2rem] pr-6">

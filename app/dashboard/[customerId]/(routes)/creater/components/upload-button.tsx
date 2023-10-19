@@ -7,13 +7,14 @@ import { au } from '@/lib/coordinates';
 import axios from 'axios';
 import { useParams } from 'next/navigation';
 import { useLoading } from '@/hooks/use-loading';
+import { cn } from '@/lib/utils';
 
 interface UploadButtonProps {}
 
 const UploadButton: React.FC<UploadButtonProps> = () => {
   const params = useParams();
   const { addJob } = useJobs();
-  const { setLoading } = useLoading();
+  const { loading, setLoading } = useLoading();
 
   function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
     setLoading(true);
@@ -51,13 +52,25 @@ const UploadButton: React.FC<UploadButtonProps> = () => {
   return (
     <>
       <input
+        disabled={loading}
         className="file-input"
         type="file"
         id="import-file"
         onChange={handleFileUpload}
       />
-      <Label className="import-label" htmlFor="import-file">
-        <span className="flex items-center">
+      <Label
+        className={cn(
+          'import-label',
+          loading && 'text-gray-400 hover:cursor-not-allowed'
+        )}
+        htmlFor="import-file"
+      >
+        <span
+          className={cn(
+            'flex items-center',
+            loading && 'text-gray-400 hover:cursor-not-allowed'
+          )}
+        >
           <Upload />
           &nbsp; &nbsp;Import Jobs
         </span>

@@ -23,7 +23,7 @@ import { Label } from '@/components/ui/label';
 import { CheckSquare, Edit } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import Loading from '@/components/loading';
+import { Loading } from '@/components/loading';
 
 const formSchema = z.object({
   name: z
