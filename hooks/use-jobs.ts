@@ -12,7 +12,7 @@ export interface JobObject {
 }
 
 export interface UploadedJobObject {
-  jobId: string;
+  id: string;
   customerName: string;
   address: string;
 }

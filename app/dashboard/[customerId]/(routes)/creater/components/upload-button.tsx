@@ -21,7 +21,7 @@ const UploadButton: React.FC<UploadButtonProps> = () => {
             const jobArray = JSON.parse(uploadedJobs as string);
             // Convert the uploadedJobs to the JobObject structure
             const convertedJobs: JobObject[] = jobArray.map((uploadedJob: UploadedJobObject) => ({
-              jobId: uploadedJob.jobId,
+              jobId: uploadedJob.id,
               address: uploadedJob.address,
               suburb: '', // Add default value for missing string
               state: '', // Add default value for missing string
@@ -30,7 +30,9 @@ const UploadButton: React.FC<UploadButtonProps> = () => {
               lat: 0, // Add default value for missing number
               lng: 0, // Add default value for missing number
             }));
-            addJob(convertedJobs[2]);
+
+            convertedJobs.map(job => addJob(job))
+
           } catch (error) {
             console.error('Error parsing JSON file content:', error);
           }
