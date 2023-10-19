@@ -10,6 +10,7 @@ import DeleteDialog from './delete-dialog';
 import EditDialog from './edit-dialog';
 import { Button } from '@/components/ui/button';
 import { Upload } from 'lucide-react';
+import UploadButton from "./upload-button";
 
 interface JobListProps {
   className?: string;
@@ -24,12 +25,7 @@ const JobList: React.FC<JobListProps> = ({ className, jobs }) => {
           Total Jobs: {jobs?.length}
         </Label>
         <div className="flex flex-row space-x-4 items-center">
-          <Button variant={'secondary'}>
-            <span className="flex items-center">
-              <Upload />
-              &nbsp; &nbsp;Import Jobs
-            </span>
-          </Button>
+          <UploadButton />
           <Button>Create Runs</Button>
         </div>
       </div>
