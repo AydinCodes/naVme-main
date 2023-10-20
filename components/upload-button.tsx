@@ -68,7 +68,7 @@ const UploadButton: React.FC<UploadButtonProps> = () => {
     <>
       <input
         disabled={loading}
-        ref={fileInputRef} // Add a ref to the input element
+        ref={fileInputRef}
         className="file-input"
         type="file"
         id="import-file"

@@ -1,10 +1,9 @@
 import { JobObject } from "@/types/job-types";
 import { create } from "zustand";
 
-
-
 interface JobsState {
   jobs: JobObject[];
+  isJobError: boolean; // New state for error checking
   addJob: (newJob: JobObject) => void;
   deleteJob: (jobId: string) => void;
   getJobById: (jobId: string) => JobObject | undefined;
@@ -13,18 +12,32 @@ interface JobsState {
 
 export const useJobs = create<JobsState>((set, get) => ({
   jobs: [],
+  isJobError: false, // Initialize isJobError as false
+
   addJob: (newJob: JobObject) =>
-    set((state) => ({
-      jobs: [...state.jobs, newJob],
-    })),
+    set((state) => {
+      const updatedJobs = [...state.jobs, newJob];
+      const isJobError = updatedJobs.some((job) => job.suburb === "Address not found");
+      return {
+        jobs: updatedJobs,
+        isJobError,
+      };
+    }),
     
   deleteJob: (jobId: string) =>
-    set((state) => ({
-      jobs: state.jobs.filter((job) => job.jobId !== jobId),
-    })),
+    set((state) => {
+      const updatedJobs = state.jobs.filter((job) => job.jobId !== jobId);
+      const isJobError = updatedJobs.some((job) => job.suburb === "Address not found");
+      return {
+        jobs: updatedJobs,
+        isJobError,
+      };
+    }),
+
   getJobById: (jobId: string) => {
     return get().jobs.find((job) => job.jobId === jobId);
   },
+
   editJobById: (jobId: string, updatedJobDetails: Partial<JobObject>) =>
     set((state) => {
       const updatedJobs = state.jobs.map((job) => {
@@ -33,8 +46,10 @@ export const useJobs = create<JobsState>((set, get) => ({
         }
         return job;
       });
+      const isJobError = updatedJobs.some((job) => job.suburb === "Address not found");
       return {
         jobs: updatedJobs,
+        isJobError,
       };
     }),
 }));
