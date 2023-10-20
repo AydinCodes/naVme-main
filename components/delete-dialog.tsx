@@ -48,7 +48,7 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ jobId }) => {
           </DialogTrigger>
           <DialogTrigger>
             <Button onClick={() => deleteJob(jobId)} variant={'destructive'}>
-              Delete
+              Delete 
             </Button>
           </DialogTrigger>
         </DialogFooter>
