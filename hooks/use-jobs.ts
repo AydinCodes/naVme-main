@@ -1,22 +1,7 @@
+import { JobObject } from "@/types/job-types";
 import { create } from "zustand";
 
-export interface JobObject {
-  customerName: string;
-  jobId: string;
-  address: string;
-  suburb: string;
-  state: string;
-  country: string;
-  placeId: string;
-  lat: number;
-  lng: number;
-}
 
-export interface UploadedJobObject {
-  id: string;
-  customer_name: string;
-  address: string;
-}
 
 interface JobsState {
   jobs: JobObject[];

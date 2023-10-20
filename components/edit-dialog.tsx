@@ -12,16 +12,16 @@ import {
 import { CheckSquare, Edit, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { JobObject, useJobs } from '@/hooks/use-jobs';
+import { useJobs } from '@/hooks/use-jobs';
 import GooglePlacesSearch from '@/components/google-places-search';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { JobObject, SelectedJobObject } from '@/types/job-types';
 
 interface EditDialogProps {
   jobId: string;
 }
 
-type SelctedJobObject = Omit<JobObject, 'customerName'>;
 
 const EditDialog: React.FC<EditDialogProps> = ({ jobId }) => {
   const { getJobById, editJobById } = useJobs();
@@ -30,7 +30,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ jobId }) => {
 
   const [customerName, setCustomerName] = useState(job ? job.customerName : '');
   const [editAddress, setEditAddress] = useState(false);
-  const [newJobDetails, setNewJobDetails] = useState<SelctedJobObject>(
+  const [newJobDetails, setNewJobDetails] = useState<SelectedJobObject>(
     job
       ? {
           address: job.address,

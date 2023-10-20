@@ -1,12 +1,11 @@
 "use client";
 
-import GooglePlacesSearch from "@/components/google-places-search";
 import JobList from "./job-list";
-import { JobObject, useJobs } from "@/hooks/use-jobs";
+import {  useJobs } from "@/hooks/use-jobs";
 import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
-import { useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useMemo } from "react";
 import { CenterPageLoading } from "@/components/loading";
+import AddDialog from "@/components/add-dialog";
 
 interface Origin {
   lat: number;
@@ -28,9 +27,6 @@ const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
   );
   const { addJob, jobs } = useJobs();
 
-  const handleSelect = (selectedJob: JobObject) => {
-    addJob(selectedJob);
-  };
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
@@ -45,11 +41,7 @@ const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
   return (
     <div className="flex justify-between h-[85vh]">
       <div className="w-[43%] h-[100%] relative flex flex-col justify-between">
-        <GooglePlacesSearch
-          className="w-[100%] z-[2]"
-          handleSelected={handleSelect}
-          placeholder="Type an address."
-        />
+        <AddDialog />
         
         <JobList
           jobs={jobs}

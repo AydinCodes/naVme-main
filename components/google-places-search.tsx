@@ -7,13 +7,13 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { JobObject } from '@/hooks/use-jobs';
 import { au } from '@/lib/coordinates';
 import { useRef, useState } from 'react';
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
 } from 'use-places-autocomplete';
+import { JobObject, SelectedJobObject } from '@/types/job-types';
 const country = au;
 
 interface GooglePlacesSearchProps {
@@ -56,7 +56,7 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
     const { lat, lng } = await getLatLng(results[0]);
     const jobId = uuidv4();
     if (terms.length === 5) {
-      const selectedJob: JobObject = {
+      const selectedJob: SelectedJobObject = {
         jobId: jobId,
         address: address,
         suburb: terms[2].value,
@@ -68,7 +68,7 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
       };
       handleSelected(selectedJob);
     } else if (terms.length === 4) {
-      const selectedJob: JobObject = {
+      const selectedJob: SelectedJobObject = {
         jobId: jobId,
         address: address,
         suburb: terms[1].value,

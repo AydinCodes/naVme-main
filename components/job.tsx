@@ -2,9 +2,8 @@
 import DeleteDialog from '@/components/delete-dialog';
 import EditDialog from '@/components/edit-dialog';
 import { Label } from '@/components/ui/label';
-import { JobObject } from '@/hooks/use-jobs';
 import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { JobObject } from '@/types/job-types';
 
 interface JobProps {
   className?: string;

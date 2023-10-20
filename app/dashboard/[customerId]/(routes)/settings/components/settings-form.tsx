@@ -14,7 +14,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { useEffect, useState } from 'react';
 import GooglePlacesSearch from '@/components/google-places-search';
-import { JobObject } from '@/hooks/use-jobs';
 import { useLoadScript } from '@react-google-maps/api';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
@@ -24,6 +23,7 @@ import { CheckSquare, Edit } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Loading } from '@/components/loading';
+import { JobObject } from '@/types/job-types';
 
 const formSchema = z.object({
   name: z
@@ -46,7 +46,7 @@ interface SettingsFormProps {
 }
 
 interface NewAddressDetails
-  extends Omit<JobObject, 'jobId' | 'placeId' | 'suburb'> {}
+  extends Omit<JobObject, 'jobId' | 'placeId' | 'suburb' |'customerName'> {}
 
 const libraries: ('places' | 'geometry' | 'drawing' | 'visualization')[] = [
   'places',

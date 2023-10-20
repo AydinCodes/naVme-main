@@ -1,7 +1,6 @@
 'use client';
 
 import { Label } from '@/components/ui/label';
-import { JobObject, useJobs } from '@/hooks/use-jobs';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
@@ -9,6 +8,7 @@ import UploadButton from './upload-button';
 import { Loading } from '@/components/loading';
 import { useLoading } from '@/hooks/use-loading';
 import Job from '@/components/job';
+import { JobObject } from '@/types/job-types';
 
 interface JobListProps {
   className?: string;

@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import MapWithJobs from "./components/map-with-jobs";
+import MapWithJobs from "../../../../../components/map-with-jobs";
 
 interface CreaterPageProps {
   params: {

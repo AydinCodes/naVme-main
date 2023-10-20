@@ -12,10 +12,11 @@ import {
 import { CheckSquare, Edit, Plus, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { JobObject, useJobs } from '@/hooks/use-jobs';
+import { useJobs } from '@/hooks/use-jobs';
 import GooglePlacesSearch from '@/components/google-places-search';
 import { Input } from './ui/input';
 import { cn } from '@/lib/utils';
+import { JobObject } from '@/types/job-types';
 
 interface AddDialogProps {}
 

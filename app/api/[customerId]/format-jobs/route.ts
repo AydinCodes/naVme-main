@@ -1,8 +1,8 @@
 import prismadb from '@/lib/prismadb';
 import { auth } from '@clerk/nextjs';
 import { NextResponse } from 'next/server';
-import { Client, GeocodeResult } from '@googlemaps/google-maps-services-js';
-import { JobObject, UploadedJobObject } from '@/hooks/use-jobs';
+import { Client } from '@googlemaps/google-maps-services-js';
+import { JobObject, UploadedJobObject } from '@/types/job-types';
 
   var api_key: string = process.env.PRIVATE_GOOGLE_MAPS_API_KEY!;
 

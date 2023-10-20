@@ -1,13 +1,13 @@
 import React from 'react';
 import { Label } from '@/components/ui/label';
 import { Upload } from 'lucide-react';
-import './styles.scss';
-import { UploadedJobObject, JobObject, useJobs } from '@/hooks/use-jobs';
-import { au } from '@/lib/coordinates';
+import '@/styles/upload.scss';
+import { useJobs } from '@/hooks/use-jobs';
 import axios from 'axios';
 import { useParams } from 'next/navigation';
 import { useLoading } from '@/hooks/use-loading';
 import { cn } from '@/lib/utils';
+import { JobObject } from '@/types/job-types';
 
 interface UploadButtonProps {}
 
