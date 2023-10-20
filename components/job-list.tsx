@@ -48,7 +48,7 @@ const JobList: React.FC<JobListProps> = ({ className, jobs }) => {
           <Loading />
         </div>
       ) : (
-        <ScrollArea className="h-[92%]">
+        <ScrollArea className="h-[92%] mt-[2rem] md:mt-0">
           <div className="flex flex-col space-y-[2rem] pr-6">
             {jobs?.map((job) => (
               <Job key={job.jobId} job={job} />

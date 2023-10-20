@@ -16,7 +16,7 @@ const Job: React.FC<JobProps> = ({ className, job }) => {
   return (
     <div
       className={cn(
-        'flex items-center justify-between border rounded-[.5rem] p-4 transition-all', (job.suburb === 'Address not found') && "bg-red-100 border-[1px] border-gray-400"
+        'flex items-center justify-between border rounded-[.5rem] p-4 transition-all', (job.suburb === 'Address not found') && "bg-red-100 border-[1px] border-gray-400 dark:bg-red-950 dark:border-gray-600"
       )}
     >
       <div className="flex flex-col space-y-4">
