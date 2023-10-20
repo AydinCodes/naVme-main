@@ -1,8 +1,4 @@
-.file-input-container {
-    position: relative;
-    display: inline-block;
-  }
-  
+
   /* Hide the default file input */
   .file-input[type="file"] {
     display: none;
@@ -11,22 +7,7 @@
   /* Style the label as a button */
   .import-label {
     cursor: pointer;
-    background-color: rgba(224, 224, 224, 0.342);
-    color: black;
     padding: .55rem .7rem;
     border-radius: .45rem;
-    display: inline-block;
-    
-  }
-  
-  .import-label:hover {
-    background-color: rgba(199, 199, 199, 0.342);
-    
-  }
-  
-  /* Style the label when the input has a file selected */
-  input[type="file"]:not(:empty) + label {
-    background-color: blue;
-    color: orange;
   }
   

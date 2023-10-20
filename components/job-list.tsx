@@ -9,6 +9,7 @@ import { Loading } from '@/components/loading';
 import { useLoading } from '@/hooks/use-loading';
 import Job from '@/components/job';
 import { JobObject } from '@/types/job-types';
+import AddDialog from './add-dialog';
 
 interface JobListProps {
   className?: string;
@@ -25,7 +26,7 @@ const JobList: React.FC<JobListProps> = ({ className, jobs }) => {
           Total Jobs: {jobs?.length}
         </Label>
         <div className="flex flex-row space-x-4 items-center">
-          <UploadButton />
+          <AddDialog />
           <Button>Create Runs</Button>
         </div>
       </div>

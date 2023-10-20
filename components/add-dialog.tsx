@@ -90,7 +90,7 @@ const AddDialog: React.FC<AddDialogProps> = ({}) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={'default'}>
+        <Button variant={'secondary'}>
           <span className="flex flex-row items-center w-full space-x-4 justify-center">
             <Plus className="mr-2" />
             Add Job

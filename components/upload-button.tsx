@@ -1,4 +1,5 @@
-import React from 'react';
+'use client';
+import React, { useRef } from 'react';
 import { Label } from '@/components/ui/label';
 import { Upload } from 'lucide-react';
 import '@/styles/upload.scss';
@@ -8,17 +9,20 @@ import { useParams } from 'next/navigation';
 import { useLoading } from '@/hooks/use-loading';
 import { cn } from '@/lib/utils';
 import { JobObject } from '@/types/job-types';
+import { v4 as uuidv4 } from 'uuid';
 
 interface UploadButtonProps {}
 
 const UploadButton: React.FC<UploadButtonProps> = () => {
   const params = useParams();
-  const { addJob } = useJobs();
+  const { addJob, jobs } = useJobs();
   const { loading, setLoading } = useLoading();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
     setLoading(true);
     const file = event.target.files?.[0];
+
     if (file) {
       if (file.type === 'application/json') {
         const reader = new FileReader();
@@ -33,11 +37,20 @@ const UploadButton: React.FC<UploadButtonProps> = () => {
             );
             const formattedJobs = await formatJobs.data;
 
-            formattedJobs.map((job: JobObject) => addJob(job));
+            formattedJobs.forEach((job: JobObject) => {
+              if (jobs.some((existingJob) => existingJob.jobId === job.jobId)) {
+                const newJobId = uuidv4();
+                job.jobId = newJobId;
+              }
+              addJob(job);
+            });
           } catch (error) {
             console.error('Error parsing JSON file content:', error);
           } finally {
             setLoading(false);
+          }
+          if (fileInputRef.current) {
+            fileInputRef.current.value = ''; // This clears the input field
           }
         };
 
@@ -46,6 +59,8 @@ const UploadButton: React.FC<UploadButtonProps> = () => {
         console.log('Unsupported file type. Only JSON files are allowed.');
         setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
   }
 
@@ -53,6 +68,7 @@ const UploadButton: React.FC<UploadButtonProps> = () => {
     <>
       <input
         disabled={loading}
+        ref={fileInputRef} // Add a ref to the input element
         className="file-input"
         type="file"
         id="import-file"
@@ -60,15 +76,15 @@ const UploadButton: React.FC<UploadButtonProps> = () => {
       />
       <Label
         className={cn(
-          'import-label',
-          loading && 'text-gray-400 hover:cursor-not-allowed'
+          'import-label bg-primary text-primary-foreground hover:bg-primary/90 ',
+          loading && ' hover:cursor-not-allowed'
         )}
         htmlFor="import-file"
       >
         <span
           className={cn(
-            'flex items-center',
-            loading && 'text-gray-400 hover:cursor-not-allowed'
+            'flex items-center w-full justify-center',
+            loading && 'hover:cursor-not-allowed'
           )}
         >
           <Upload />
