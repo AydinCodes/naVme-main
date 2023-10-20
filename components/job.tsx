@@ -4,7 +4,7 @@ import EditDialog from '@/components/edit-dialog';
 import { Label } from '@/components/ui/label';
 import { JobObject } from '@/hooks/use-jobs';
 import { cn } from '@/lib/utils';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface JobProps {
   className?: string;
@@ -12,6 +12,7 @@ interface JobProps {
 }
 
 const Job: React.FC<JobProps> = ({ className, job }) => {
+
 
   return (
 
@@ -22,7 +23,6 @@ const Job: React.FC<JobProps> = ({ className, job }) => {
       )}
     >
       <div className="flex flex-col space-y-4">
-        <Label>{job.jobId}</Label>
         <Label className="">{job.customerName}</Label>
         <Label
           className={cn(

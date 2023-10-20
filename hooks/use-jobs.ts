@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 export interface JobObject {
-  customerName?: string;
+  customerName: string;
   jobId: string;
   address: string;
   suburb: string;
@@ -48,7 +48,6 @@ export const useJobs = create<JobsState>((set, get) => ({
         }
         return job;
       });
-
       return {
         jobs: updatedJobs,
       };
