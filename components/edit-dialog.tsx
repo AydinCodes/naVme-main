@@ -99,7 +99,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ jobId }) => {
           <Settings />
         </Button>
       </DialogTrigger>
-      <DialogContent className="">
+      <DialogContent className="w-[22rem]">
         <DialogHeader>
           <DialogTitle>Update Job</DialogTitle>
           <DialogDescription>
@@ -154,6 +154,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ jobId }) => {
           </div>
         </div>
         <DialogFooter>
+          <div className='flex space-x-4 justify-center md:justify-end'>
           <DialogTrigger>
             <Button onClick={handleCancel} variant={'secondary'}>
               Cancel
@@ -181,6 +182,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ jobId }) => {
               Save
             </Button>
           </DialogTrigger>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

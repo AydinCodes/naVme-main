@@ -14,6 +14,7 @@ import usePlacesAutocomplete, {
   getLatLng,
 } from 'use-places-autocomplete';
 import { JobObject, SelectedJobObject } from '@/types/job-types';
+import { cn } from '@/lib/utils';
 const country = au;
 
 interface GooglePlacesSearchProps {
@@ -86,8 +87,8 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
   };
 
   return (
-    <div className={className}>
-      <Command
+    <div className={cn(className, "relative z-[500]")}>
+      <Command 
         onFocus={() => setShowResults(true)}
         onBlur={() => {
           setTimeout(() => {
@@ -97,7 +98,7 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
             itemSelectedRef.current = false;
           }, 120);
         }}
-        className="border"
+        className="border "
       >
         <CommandInput
           placeholder={placeholder}

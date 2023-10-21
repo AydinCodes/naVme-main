@@ -49,8 +49,7 @@ const AddDialog: React.FC<AddDialogProps> = ({}) => {
       lng: 0,
     });
     setEditAddress(false);
-    setCustomerName("")
-
+    setCustomerName('');
   };
 
   const handleChanges = () => {
@@ -66,7 +65,7 @@ const AddDialog: React.FC<AddDialogProps> = ({}) => {
         lat: newJobDetails.lat,
         lng: newJobDetails.lng,
       };
-      addJob(jobDetails)
+      addJob(jobDetails);
       handleCancel();
     } else {
       handleCancel();
@@ -97,7 +96,7 @@ const AddDialog: React.FC<AddDialogProps> = ({}) => {
           </span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="">
+      <DialogContent className="w-[22rem]">
         <DialogHeader>
           <DialogTitle>Add Job</DialogTitle>
           <DialogDescription>
@@ -106,7 +105,14 @@ const AddDialog: React.FC<AddDialogProps> = ({}) => {
         </DialogHeader>
         <div className="flex flex-col justify-between items-center space-y-6">
           <div className="flex flex-row w-full items-center justify-between">
-            <Label className={cn("font-bold", (customerName.length === 0) && "text-red-600")}>Customer Name: </Label>
+            <Label
+              className={cn(
+                'font-bold',
+                customerName.length === 0 && 'text-red-600'
+              )}
+            >
+              Customer Name:
+            </Label>
             <Input
               className="outline-none w-[70%]"
               onChange={(e) => setCustomerName(e.target.value)}
@@ -114,14 +120,20 @@ const AddDialog: React.FC<AddDialogProps> = ({}) => {
             />
           </div>
           <div className="flex items-center gap-4 w-[100%]">
-            <Label className={cn("text-right font-bold", (newJobDetails.suburb === '') && "text-red-600")}>Address:</Label>
+            <Label
+              className={cn(
+                'text-right font-bold',
+                newJobDetails.suburb === '' && 'text-red-600'
+              )}
+            >
+              Address:
+            </Label>
             <div className="relative w-[80%] h-[2rem] flex items-center">
               {!editAddress && newJobDetails.address.length > 0 ? (
                 <Label>{newJobDetails.address}</Label>
               ) : (
                 <div className="absolute left-0 top-[-0.4rem] w-[100%]">
                   <GooglePlacesSearch
-                    className="z-[2]"
                     handleSelected={handleSelect}
                     placeholder="Type an address."
                   />
@@ -148,32 +160,32 @@ const AddDialog: React.FC<AddDialogProps> = ({}) => {
           </div>
         </div>
         <DialogFooter>
-          <DialogTrigger>
-            <Button onClick={handleCancel} variant={'secondary'}>
-              Cancel
-            </Button>
-          </DialogTrigger>
-          <DialogTrigger
-          className={cn(
-            (customerName.length === 0 ||
-              newJobDetails.suburb === '') &&
-              'hover:cursor-not-allowed'
-          )}
-          disabled={
-            customerName.length === 0 ||
-            newJobDetails.suburb === ''
-          }>
-            <Button
+          <div className='flex space-x-4 justify-center md:justify-end'>
+            <DialogTrigger>
+              <Button onClick={handleCancel} variant={'secondary'}>
+                Cancel
+              </Button>
+            </DialogTrigger>
+            <DialogTrigger
+              className={cn(
+                (customerName.length === 0 || newJobDetails.suburb === '') &&
+                  'hover:cursor-not-allowed'
+              )}
               disabled={
-                customerName.length === 0 ||
-                newJobDetails.suburb === ''
+                customerName.length === 0 || newJobDetails.suburb === ''
               }
-              onClick={handleChanges}
-              variant={'default'}
             >
-              Add
-            </Button>
-          </DialogTrigger>
+              <Button
+                disabled={
+                  customerName.length === 0 || newJobDetails.suburb === ''
+                }
+                onClick={handleChanges}
+                variant={'default'}
+              >
+                Add
+              </Button>
+            </DialogTrigger>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
