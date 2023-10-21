@@ -21,35 +21,44 @@ const JobList: React.FC<JobListProps> = ({ className, jobs }) => {
   const { isJobError } = useJobs();
 
   return (
-    <div className={cn(className, 'w-[100%] h-full md:h-[87%] mb-[4rem]')}>
-      <div className="flex justify-between items-center h-[20%]">
-        <div className="flex flex-col space-y-4">
-          <Label className="text-secondary-foreground">
-            Total Jobs: {jobs ? jobs.length : '0'}
-          </Label>
+    <div
+      className={cn(
+        className,
+        'md:flex md:flex-col md:justify-between w-[100%] md:h-[45rem] '
+      )}
+    >
+      <div className="flex justify-between items-center h-[20%] ">
+        <div className=" h-[6rem] md:mb-8 flex flex-col justify-between items-center w-full">
+          <div className=" w-full flex flex-col md:flex-row justify-between items-center">
+            <div className="flex flex-col space-y-4">
+              <Label className="text-secondary-foreground mb-3 md:mb-0">
+                Total Jobs: {jobs ? jobs.length : '0'}
+              </Label>
+            </div>
+            <div className="flex flex-row space-x-4 items-center">
+              <AddDialog />
+              <Button
+                disabled={isJobError}
+                className={cn(isJobError && 'hover:cursor-not-allowed')}
+              >
+                Create Runs
+              </Button>
+            </div>
+          </div>
           {isJobError && (
-            <Label className="text-red-500">
+            <Label className="text-red-500 md:w-full">
               One or more jobs are missing some data.
             </Label>
           )}
         </div>
-        <div className="flex flex-row space-x-4 items-center">
-          <AddDialog />
-          <Button
-            disabled={isJobError}
-            className={cn(isJobError && 'hover:cursor-not-allowed')}
-          >
-            Create Runs
-          </Button>
-        </div>
       </div>
       {loading ? (
-        <div className="flex justify-center mt-[4rem]">
+        <div className="flex justify-center mt-[4rem] mb-[2rem]">
           <Loading />
         </div>
       ) : (
-        <ScrollArea className="h-[92%] mt-[2rem] md:mt-0">
-          <div className="flex flex-col space-y-[2rem] pr-6">
+        <ScrollArea className="mt-[2rem] md:mt-0 mb-6 md:mb-0 ">
+          <div className="flex flex-col space-y-[2rem] md:mr-4">
             {jobs?.map((job) => (
               <Job key={job.jobId} job={job} />
             ))}

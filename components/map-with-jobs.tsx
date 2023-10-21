@@ -36,12 +36,12 @@ const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
   }
 
   return (
-    <div className="flex flex-col justify-between md:flex-row md:h-[85vh] h-[100vh]">
-      <div className="w-full md:w-[46%] md:h-[100%] relative flex flex-col justify-between">
+    <div className="flex flex-col md:flex-row md:h-[50rem] md:justify-between ">
+      <div className="w-full md:w-[53%] md:h-full relative flex flex-col justify-between ">
         <UploadButton />
-        <JobList jobs={jobs} className="md:absolute z-[1] mt-[2rem]" />
+        <JobList jobs={jobs} className="z-[1] mt-[2rem] md:mt-0" />
       </div>
-      <div className="w-full md:w-[50%] h-full">
+      <div className="w-full md:w-[44%] h-[20rem] md:h-[50rem]">
       <GoogleMap
         zoom={10}
         center={center}
