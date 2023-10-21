@@ -1,8 +1,8 @@
-import { auth } from "@clerk/nextjs";
-import { MainNav } from "./home-main-nav";
-import Link from "next/link";
-import { Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { auth } from '@clerk/nextjs';
+import { MainNav } from './home-main-nav';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import HomeMobileNav from './home-mobile-nav';
 
 const Navbar = async () => {
   const { userId } = auth();
@@ -15,30 +15,32 @@ const Navbar = async () => {
       >
         naVme
       </Link>
-      <div className="md:hidden">
-        <button className="navbar-burger flex items-center text-primary p-3">
-          <Menu /> Mobile Nav togg
-        </button>
-      </div>
+
       <ul className="hidden absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 md:flex md:mx-auto md:items-center md:w-auto md:space-x-6">
         <MainNav />
       </ul>
-	  <div>
-      {userId ? (
-        <Link href={"/auth"}>
-          <Button>Dashboard</Button>
-        </Link>
-      ) : (
-        <div className="space-x-4">
-          <Link href={"/sign-in"}>
-          <Button variant={"secondary"}>Sign in</Button>
-        </Link>
-		<Link href={"/sign-up"}>
-          <Button>Sign up</Button>
-        </Link>
+      <div className='flex flex-row items-center justify-between space-x-4'>
+        <div>
+          {userId ? (
+            <Link href={'/auth'}>
+              <Button>Dashboard</Button>
+            </Link>
+          ) : (
+            <div className="space-x-4">
+              <Link href={'/sign-in'}>
+                <Button variant={'secondary'}>Sign in</Button>
+              </Link>
+              <Link href={'/sign-up'}>
+                <Button>Sign up</Button>
+              </Link>
+            </div>
+          )}
         </div>
-      )}
-    </div></div>
+        <div className="md:hidden">
+          <HomeMobileNav className="flex items-center text-primary p-3" />
+        </div>
+      </div>
+    </div>
   );
 };
 
