@@ -5,7 +5,6 @@ import { useJobs } from '@/hooks/use-jobs';
 import { GoogleMap, MarkerF, useLoadScript } from '@react-google-maps/api';
 import { useMemo } from 'react';
 import { CenterPageLoading } from '@/components/loading';
-import AddDialog from '@/components/add-dialog';
 import UploadButton from './upload-button';
 
 interface Origin {
@@ -25,7 +24,7 @@ const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
     () => ({ lat: origin.lat, lng: origin.lng }),
     [origin.lat, origin.lng]
   );
-  const { addJob, jobs } = useJobs();
+  const { jobs } = useJobs();
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
@@ -38,12 +37,11 @@ const MapWithJobs: React.FC<MapWithJobsProps> = ({ origin }) => {
 
   return (
     <div className="flex flex-col justify-between md:flex-row md:h-[85vh] h-[100vh]">
-      <div className="w-full md:w-[50%] md:h-[100%] relative flex flex-col justify-between">
+      <div className="w-full md:w-[46%] md:h-[100%] relative flex flex-col justify-between">
         <UploadButton />
-
         <JobList jobs={jobs} className="md:absolute z-[1] mt-[2rem]" />
       </div>
-      <div className="w-full md:w-[46%] h-full">
+      <div className="w-full md:w-[50%] h-full">
       <GoogleMap
         zoom={10}
         center={center}

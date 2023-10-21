@@ -21,7 +21,7 @@ const JobList: React.FC<JobListProps> = ({ className, jobs }) => {
   const { isJobError } = useJobs();
 
   return (
-    <div className={cn(className, 'w-[100%] h-[87%] mb-[4rem]')}>
+    <div className={cn(className, 'w-[100%] h-full md:h-[87%] mb-[4rem]')}>
       <div className="flex justify-between items-center h-[20%]">
         <div className="flex flex-col space-y-4">
           <Label className="text-secondary-foreground">
