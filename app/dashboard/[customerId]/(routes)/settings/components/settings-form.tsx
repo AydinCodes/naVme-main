@@ -206,12 +206,12 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
                 Address
               </FormLabel>
 
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <FormControl className="w-[95%]">
                   {editAddress ? (
                     isLoaded ? (
                       <GooglePlacesSearch
-                        className="z-[2] relative"
+                        className="relative"
                         handleSelected={handleSelect}
                         placeholder="Enter origin address."
                       />
@@ -223,7 +223,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
                   )}
                 </FormControl>
                 <Button
-                  className="relative top-1"
+                  className="relative"
                   disabled={displayAddress.length === 0}
                   onClick={() => setEditAddress(!editAddress)}
                   size={'icon'}
