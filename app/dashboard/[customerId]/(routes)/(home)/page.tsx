@@ -28,6 +28,11 @@ const HomePage: React.FC<HomePageProps> = async ({ params }) => {
   if (!customer) {
     redirect("/auth");
   } 
+
+
+  if (customer?.address === "") {
+    redirect(`/dashboard/${params.customerId}/settings`)
+  }
   return (
     <div>
       dashboard page

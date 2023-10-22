@@ -34,6 +34,10 @@ const CreaterPage: React.FC<CreaterPageProps> = async ({ params }) => {
       lng: customer.lng
     }
   }
+
+  if (customer?.address === "") {
+    redirect(`/dashboard/${params.customerId}/settings`)
+  }
   return (
     <div className="">
       <div className="p-4 md:p-8 pt-6">

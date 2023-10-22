@@ -58,7 +58,7 @@ export function MobileNav({
     return null;
   }
   return (
-    <div className={className}>
+    <div className={cn(className)}>
       <Sheet>
         <SheetTrigger>
           <Menu className='text-primary'/>

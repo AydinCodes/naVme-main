@@ -17,7 +17,7 @@ import GooglePlacesSearch from '@/components/google-places-search';
 import { useLoadScript } from '@react-google-maps/api';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
-import { useParams, useRouter } from 'next/navigation';
+import { redirect, useParams, useRouter } from 'next/navigation';
 import { Label } from '@/components/ui/label';
 import { CheckSquare, Edit } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -113,6 +113,8 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
           title: 'Awesome!',
           description: 'Your settings have been updated.',
         });
+        router.push(`/dashboard/${params.customerId}`)
+
       } catch (error) {
         toast({
           variant: 'destructive',
@@ -200,7 +202,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
               <FormLabel
                 className={cn(
                   'font-bold',
-                  addressError ? 'text-destructive' : ''
+                  displayAddress.length === 0 ? 'text-destructive' : ''
                 )}
               >
                 Address
@@ -233,20 +235,20 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
                   {editAddress === true ? <CheckSquare /> : <Edit />}
                 </Button>
               </div>
-              {addressError && (
+              {displayAddress.length === 0 && (
                 <p
                   className={
                     'text-sm font-medium text-destructive z-[1] absolute top-[5rem] left-0'
                   }
                 >
-                  Please enter an address before saving.
+                  Please enter an address before starting.
                 </p>
               )}
             </FormItem>
           </div>
           <Button
             className="absolute bottom-0 right-0"
-            disabled={loading}
+            disabled={loading || displayAddress.length === 0}
             type="submit"
           >
             Save

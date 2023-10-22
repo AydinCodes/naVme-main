@@ -34,6 +34,12 @@ const OrganiserPage: React.FC<OrganiserPageProps> = async ({ params }) => {
       lng: customer.lng
     }
   }
+
+  if (customer?.address === "") {
+    redirect(`/dashboard/${params.customerId}/settings`)
+  }
+
+
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">

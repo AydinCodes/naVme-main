@@ -13,7 +13,7 @@ export const Loading: React.FC<LoadingProps> = ({ className }) => {
 
 export const CenterPageLoading: React.FC = () => {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
+      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 z-1000">
         <Loading />
       </div>
     );

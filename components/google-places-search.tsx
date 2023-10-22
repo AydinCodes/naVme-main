@@ -87,7 +87,7 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
   };
 
   return (
-    <div className={cn(className, "relative z-[500]")}>
+    <div className={cn(className, "relative z-[40]")}>
       <Command 
         onFocus={() => setShowResults(true)}
         onBlur={() => {
