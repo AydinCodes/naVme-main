@@ -14,42 +14,39 @@ import { Label } from '@/components/ui/label';
 import { useJobs } from '@/hooks/use-jobs';
 import { Trash2 } from 'lucide-react';
 
-interface DeleteDialogProps {
-  jobId: string;
+interface DeleteAllDialogProps {
+  className?: string
 }
 
-const DeleteDialog: React.FC<DeleteDialogProps> = ({ jobId }) => {
-  const { getJobById, deleteJob } = useJobs();
+const DeleteAllDialog: React.FC<DeleteAllDialogProps> = ({ className }) => {
+  const { deleteAllJobs } = useJobs();
 
-  const job = getJobById(jobId);
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={'destructive'}>
-          <Trash2 />
+        <Button className={className} variant={'destructive'}>
+          Delete All Jobs
         </Button>
       </DialogTrigger>
       <DialogContent className="w-[22rem]">
 
         <DialogHeader>
-          <DialogTitle>Delete Job</DialogTitle>
+          <DialogTitle>Delete All Jobs</DialogTitle>
           <DialogDescription className="">
-            Are you sure you want to delete this job?
+            Are you sure you want to delete all jobs?
           </DialogDescription>
         </DialogHeader>
-        <div className="flex items-center gap-4">
-          <Label className="text-right font-bold">Customer:</Label>
-          <Label>{job?.customerName}</Label>
+        <div className="flex items-center gap-4 justify-center md:justify-start">
+          <Label>This action cannot be undone.</Label>
         </div>
-        <Label className="font-bold">{job?.suburb}</Label>
         <DialogFooter>
           <div className="flex space-x-4 justify-center md:justify-end">
             <DialogTrigger>
               <Button variant={'secondary'}>Cancel</Button>
             </DialogTrigger>
             <DialogTrigger>
-              <Button onClick={() => deleteJob(jobId)} variant={'destructive'}>
+              <Button onClick={() => deleteAllJobs()} variant={'destructive'}>
                 Delete
               </Button>
             </DialogTrigger>
@@ -60,4 +57,4 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ jobId }) => {
   );
 };
 
-export default DeleteDialog;
+export default DeleteAllDialog;

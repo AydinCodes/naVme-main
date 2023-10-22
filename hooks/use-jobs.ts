@@ -3,16 +3,17 @@ import { create } from "zustand";
 
 interface JobsState {
   jobs: JobObject[];
-  isJobError: boolean; // New state for error checking
+  isJobError: boolean;
   addJob: (newJob: JobObject) => void;
   deleteJob: (jobId: string) => void;
   getJobById: (jobId: string) => JobObject | undefined;
   editJobById: (jobId: string, updatedJobDetails: Partial<JobObject>) => void;
+  deleteAllJobs: () => void;
 }
 
 export const useJobs = create<JobsState>((set, get) => ({
   jobs: [],
-  isJobError: false, // Initialize isJobError as false
+  isJobError: false,
 
   addJob: (newJob: JobObject) =>
     set((state) => {
@@ -50,6 +51,14 @@ export const useJobs = create<JobsState>((set, get) => ({
       return {
         jobs: updatedJobs,
         isJobError,
+      };
+    }),
+
+    deleteAllJobs: () =>
+    set(() => {
+      return {
+        jobs: [],
+        isJobError: false,
       };
     }),
 }));

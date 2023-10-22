@@ -10,6 +10,7 @@ import Job from '@/components/job';
 import { JobObject } from '@/types/job-types';
 import AddDialog from './add-dialog';
 import { useJobs } from '@/hooks/use-jobs';
+import DeleteAllDialog from './delete-all-dialog';
 
 interface JobListProps {
   className?: string;
@@ -31,11 +32,13 @@ const JobList: React.FC<JobListProps> = ({ className, jobs }) => {
         <div className=" h-[6rem] md:mb-8 flex flex-col justify-between items-center w-full">
           <div className=" w-full flex flex-col md:flex-row justify-between items-center">
             <div className="flex flex-col space-y-4">
-              {jobs && (jobs.length > 0) ? (
+              {jobs && jobs.length > 0 ? (
                 <Label className="text-secondary-foreground mb-3 md:mb-0">
                   Total Jobs: {jobs.length}
                 </Label>
-              ) : ""}
+              ) : (
+                ''
+              )}
             </div>
             <div className="flex flex-row space-x-4 items-center">
               <AddDialog />
@@ -47,10 +50,17 @@ const JobList: React.FC<JobListProps> = ({ className, jobs }) => {
               </Button>
             </div>
           </div>
-          {isJobError && (
-            <Label className="text-red-500 md:w-full">
-              One or more jobs are missing some data.
-            </Label>
+          {jobs && jobs.length > 0 && (
+            <div className="flex w-full justify-between items-center flex-col md:flex-row mt-2 md:mt-0">
+              {isJobError ? (
+                <Label className="text-red-500">
+                  One or more jobs are missing some data.
+                </Label>
+              ) : (
+                <div></div>
+              )}
+              <DeleteAllDialog className="mt-2 md:mt-0" />
+            </div>
           )}
         </div>
       </div>
@@ -59,7 +69,7 @@ const JobList: React.FC<JobListProps> = ({ className, jobs }) => {
           <Loading />
         </div>
       ) : (
-        <ScrollArea className="mt-[2rem] md:mt-0 mb-6 md:mb-0 h-full">
+        <ScrollArea className="mt-[3rem] md:mt-0 mb-6 md:mb-0 h-full">
           <div className="flex flex-col space-y-[2rem] md:mr-4">
             {jobs?.map((job) => (
               <Job key={job.jobId} job={job} />
