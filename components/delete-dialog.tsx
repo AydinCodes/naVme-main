@@ -30,7 +30,8 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ jobId }) => {
           <Trash2 />
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-[22rem]">
+      <DialogContent className="w-[22rem] top-[10rem] md:top-[50%]">
+
         <DialogHeader>
           <DialogTitle>Delete Job</DialogTitle>
           <DialogDescription className="">

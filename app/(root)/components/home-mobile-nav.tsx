@@ -53,8 +53,8 @@ export function HomeMobileNav({
   return (
     <div>
       <Sheet>
-        <SheetTrigger>
-          <Menu className='text-primary'/>
+        <SheetTrigger className='mt-2'>
+          <Menu className='text-primary '/>
         </SheetTrigger>
         <SheetContent>
           <nav

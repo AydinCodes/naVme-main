@@ -96,7 +96,7 @@ const AddDialog: React.FC<AddDialogProps> = ({}) => {
           </span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-[22rem]">
+      <DialogContent className="w-[22rem] top-[10rem] md:top-[50%]">
         <DialogHeader>
           <DialogTitle>Add Job</DialogTitle>
           <DialogDescription>
