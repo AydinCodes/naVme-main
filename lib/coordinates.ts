@@ -42,3 +42,9 @@ export const au = {
     west: 129.0001,
   },
 };
+
+
+export const countries = {
+  "Australia": "au",
+  "United States": "usa"
+}

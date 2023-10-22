@@ -19,6 +19,7 @@ model Customer {
   address   String   @default("")
   lat       Float    @default(-26)
   lng       Float    @default(135)
+  radius    Float    @default(10)
   state     String   @default("")
   country   String   @default("")
   vehicles  Int      @default(1)

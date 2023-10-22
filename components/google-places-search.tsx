@@ -13,7 +13,7 @@ import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
 } from 'use-places-autocomplete';
-import { JobObject, SelectedJobObject } from '@/types/job-types';
+import { SelectedJobObject } from '@/types/job-types';
 import { cn } from '@/lib/utils';
 const country = au;
 
