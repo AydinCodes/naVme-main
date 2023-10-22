@@ -40,7 +40,7 @@ const JobList: React.FC<JobListProps> = ({ className, jobs }) => {
             <div className="flex flex-row space-x-4 items-center">
               <AddDialog />
               <Button
-                disabled={isJobError}
+                disabled={isJobError || jobs?.length === 0}
                 className={cn(isJobError && 'hover:cursor-not-allowed')}
               >
                 Create Runs

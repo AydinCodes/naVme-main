@@ -100,7 +100,6 @@ const EditDialog: React.FC<EditDialogProps> = ({ jobId }) => {
         </Button>
       </DialogTrigger>
       <DialogContent className="w-[22rem] top-[10rem] md:top-[50%]">
-
         <DialogHeader>
           <DialogTitle>Update Job</DialogTitle>
           <DialogDescription>
