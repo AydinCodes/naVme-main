@@ -28,20 +28,28 @@ export async function PATCH(
       return new NextResponse("Unauthorized", { status: 403 });
     }
 
-    const updatedCustomer = await prismadb.customer.updateMany({
+    const updatedCustomer = await prismadb.customer.update({
       where: {
         id: params.customerId,
       },
       data: {
         name,
         vehicles,
-        address,
-        state,
-        country,
-        lat,
-        lng,
       },
     });
+
+    const updatedOriginDetails = await prismadb.originDetails.update({
+      where: {
+        customerId: updatedCustomer.id,
+      },
+      data: {
+        address: address,
+        lat: lat,
+        lng: lng,
+        country: country,
+        state: state,
+      }
+    })
 
     return NextResponse.json(updatedCustomer);
   } catch (error) {

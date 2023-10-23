@@ -22,17 +22,28 @@ const HomePage: React.FC<HomePageProps> = async ({ params }) => {
     },
   });
 
-  
+  const originDetails = await prismadb.originDetails.findFirst({
+    where: {
+      customerId: params.customerId
+    },
+    select: {
+      address: true
+    }
+  })
  
 
   if (!customer) {
     redirect("/auth");
   } 
 
+  if (!originDetails) {
+    redirect("/auth")
+  }
 
-  if (customer?.address === "") {
+  if (originDetails?.address === "") {
     redirect(`/dashboard/${params.customerId}/settings`)
   }
+
   return (
     <div>
       dashboard page
