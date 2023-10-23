@@ -31,7 +31,7 @@ export const getDashboardRoutes = (params: Params, pathname: string) => {
           href: `/dashboard/${params.customerId}`,
           label: "Dashboard",
           active: pathname === `/dashboard/${params.customerId}`,
-        },
+        }, 
         {
           href: `/dashboard/${params.customerId}/creater`,
           label: "Run Creater",
