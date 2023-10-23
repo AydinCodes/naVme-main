@@ -130,6 +130,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ jobId }) => {
                     className="z-[2]"
                     handleSelected={handleSelect}
                     placeholder="Type an address."
+                    restrictions={true}
                   />
                 </div>
               )}

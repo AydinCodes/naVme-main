@@ -21,12 +21,14 @@ interface GooglePlacesSearchProps {
   handleSelected: any;
   className?: string;
   placeholder: string;
+  restrictions: boolean;
 }
 
 const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
   handleSelected,
   className,
   placeholder,
+  restrictions
 }) => {
   const [showResults, setShowResults] = useState(false);
   const itemSelectedRef = useRef(false);
@@ -41,9 +43,9 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
     requestOptions: {
       types: ['address'],
       componentRestrictions: {
-        country: 'au',
+        country: restrictions ? 'au' : null,
       },
-      locationRestriction: country.vic,
+      locationRestriction: restrictions ? country.vic : undefined,
     },
   });
 

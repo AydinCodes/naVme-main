@@ -56,6 +56,16 @@ interface SettingsFormProps {
 interface NewAddressDetails
   extends Omit<JobObject, 'jobId' | 'placeId' | 'suburb' | 'customerName'> {}
 
+interface DisplayAddressDetails {
+  address: string;
+  lat: number;
+  lng: number;
+  north?: number;
+  south?: number;
+  east?: number;
+  west?: number;
+}
+
 const libraries: ('places' | 'geometry' | 'drawing' | 'visualization')[] = [
   'places',
 ];
@@ -76,7 +86,11 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
   const [loading, setLoading] = useState(false);
   const [editAddress, setEditAddress] = useState(false);
   const [addressError, setAddressError] = useState(false);
-  const [displayAddress, setDisplayAddress] = useState('');
+  const [displayAddress, setDisplayAddress] = useState<DisplayAddressDetails>({
+    address: '',
+    lat: 0,
+    lng: 0,
+  });
   const [newAddressDetails, setNewAddressDetails] = useState<NewAddressDetails>(
     {
       address: '',
@@ -90,11 +104,15 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
   useEffect(() => {
     if (initialSettings.address.length > 0) {
       setEditAddress(false);
-      setDisplayAddress(initialSettings.address);
+      setDisplayAddress({
+        address: initialSettings.address,
+        lat: origin.lat,
+        lng: origin.lng,
+      });
     } else {
       setEditAddress(true);
     }
-  }, [initialSettings]);
+  }, [initialSettings, origin]);
 
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(formSchema),
@@ -104,7 +122,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
   const { register, handleSubmit } = form;
 
   const onSubmit = async (data: SettingsFormValues) => {
-    if (displayAddress.length > 0) {
+    if (displayAddress.address.length > 0) {
       try {
         setLoading(true);
 
@@ -152,7 +170,11 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
       lat: selectedAddress.lat,
       lng: selectedAddress.lng,
     });
-    setDisplayAddress(selectedAddress.address);
+    setDisplayAddress({
+      address: selectedAddress.address,
+      lat: selectedAddress.lat,
+      lng: selectedAddress.lng,
+    });
     setEditAddress(false);
     setAddressError(false);
   };
@@ -221,7 +243,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
               <FormLabel
                 className={cn(
                   'font-bold',
-                  displayAddress.length === 0 ? 'text-destructive' : ''
+                  displayAddress.address.length === 0 ? 'text-destructive' : ''
                 )}
               >
                 Address
@@ -235,17 +257,18 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                         className="relative"
                         handleSelected={handleSelect}
                         placeholder="Enter origin address."
+                        restrictions={false}
                       />
                     ) : (
                       <Loading />
                     )
                   ) : (
-                    <Label>{displayAddress}</Label>
+                    <Label>{displayAddress.address}</Label>
                   )}
                 </FormControl>
                 <Button
                   className="relative"
-                  disabled={displayAddress.length === 0}
+                  disabled={displayAddress.address.length === 0}
                   onClick={() => setEditAddress(!editAddress)}
                   size={'icon'}
                   variant={'ghost'}
@@ -254,7 +277,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                   {editAddress === true ? <CheckSquare /> : <Edit />}
                 </Button>
               </div>
-              {displayAddress.length === 0 && (
+              {displayAddress.address.length === 0 && (
                 <p
                   className={
                     'text-sm font-medium text-destructive z-[1] absolute top-[5rem] left-0'
@@ -265,18 +288,22 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
               )}
             </FormItem>
           </div>
-          <GoogleMap
-            zoom={10}
-            center={center}
-            mapContainerClassName="w-full h-full rounded-[0.5rem]"
-          ></GoogleMap>
-          <Button
-            className="absolute bottom-0 right-0"
-            disabled={loading || displayAddress.length === 0}
-            type="submit"
-          >
-            Save
-          </Button>
+          <div className="flex flex-col w-full h-full space-y-4">
+            <GoogleMap
+              zoom={10}
+              center={center}
+              mapContainerClassName="w-full h-full rounded-[0.5rem]"
+            ></GoogleMap>
+            <div className="w-full flex justify-end">
+              <Button
+                className="w-full md:w-[5rem]"
+                disabled={loading || displayAddress.address.length === 0}
+                type="submit"
+              >
+                Save
+              </Button>
+            </div>
+          </div>
         </form>
       </Form>
     </div>

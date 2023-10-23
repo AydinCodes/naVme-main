@@ -136,6 +136,7 @@ const AddDialog: React.FC<AddDialogProps> = ({}) => {
                   <GooglePlacesSearch
                     handleSelected={handleSelect}
                     placeholder="Type an address."
+                    restrictions={true}
                   />
                 </div>
               )}
