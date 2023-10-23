@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import MapWithJobs from "../../../../../components/map-with-jobs";
+import MapWithJobs from "@/components/map-with-jobs";
 
 interface CreaterPageProps {
   params: {
@@ -23,19 +23,32 @@ const CreaterPage: React.FC<CreaterPageProps> = async ({ params }) => {
     },
   });
 
-  
+  const originDetails = await prismadb.originDetails.findFirst({
+    where: {
+      customerId: params.customerId
+    },
+    select: {
+      lat: true,
+      lng: true,
+      address: true
+    }
+  })
  
 
   if (!customer) {
     redirect("/auth");
+  }
+  
+  if(!originDetails) {
+    redirect("/auth");
   } else {
     var origin = {
-      lat: customer.lat,
-      lng: customer.lng
+      lat: originDetails.lat,
+      lng: originDetails.lng
     }
   }
 
-  if (customer?.address === "") {
+  if (originDetails?.address === "") {
     redirect(`/dashboard/${params.customerId}/settings`)
   }
   return (

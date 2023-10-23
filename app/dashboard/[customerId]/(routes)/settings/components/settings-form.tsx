@@ -12,9 +12,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import GooglePlacesSearch from '@/components/google-places-search';
-import { useLoadScript } from '@react-google-maps/api';
+import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
 import { redirect, useParams, useRouter } from 'next/navigation';
@@ -24,6 +24,8 @@ import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Loading } from '@/components/loading';
 import { JobObject } from '@/types/job-types';
+import { useJobs } from '@/hooks/use-jobs';
+import { CenterPageLoading } from '@/components/loading';
 
 const formSchema = z.object({
   name: z
@@ -41,21 +43,35 @@ type CustomerSettings = {
   vehicles: number;
 };
 
+interface Origin {
+  lat: number;
+  lng: number;
+}
+
 interface SettingsFormProps {
   initialSettings: CustomerSettings;
+  origin: Origin;
 }
 
 interface NewAddressDetails
-  extends Omit<JobObject, 'jobId' | 'placeId' | 'suburb' |'customerName'> {}
+  extends Omit<JobObject, 'jobId' | 'placeId' | 'suburb' | 'customerName'> {}
 
 const libraries: ('places' | 'geometry' | 'drawing' | 'visualization')[] = [
   'places',
 ];
 
-const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
+const SettingsForm: React.FC<SettingsFormProps> = ({
+  initialSettings,
+  origin,
+}) => {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
+
+  const center = useMemo(
+    () => ({ lat: origin.lat, lng: origin.lng }),
+    [origin.lat, origin.lng]
+  );
 
   const [loading, setLoading] = useState(false);
   const [editAddress, setEditAddress] = useState(false);
@@ -113,8 +129,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
           title: 'Awesome!',
           description: 'Your settings have been updated.',
         });
-        router.push(`/dashboard/${params.customerId}`)
-
+        router.push(`/dashboard/${params.customerId}`);
       } catch (error) {
         toast({
           variant: 'destructive',
@@ -146,6 +161,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
     libraries: libraries,
   });
+
+  if (!isLoaded) {
+    return <CenterPageLoading />;
+  }
 
   return (
     <div className="h-[85vh]">
@@ -246,6 +265,11 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
               )}
             </FormItem>
           </div>
+          <GoogleMap
+            zoom={10}
+            center={center}
+            mapContainerClassName="w-full h-full rounded-[0.5rem]"
+          ></GoogleMap>
           <Button
             className="absolute bottom-0 right-0"
             disabled={loading || displayAddress.length === 0}

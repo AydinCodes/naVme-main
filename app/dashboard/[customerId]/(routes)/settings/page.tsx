@@ -1,7 +1,7 @@
-import prismadb from "@/lib/prismadb";
-import { auth } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
-import SettingsForm from "./components/settings-form";
+import prismadb from '@/lib/prismadb';
+import { auth } from '@clerk/nextjs';
+import { redirect } from 'next/navigation';
+import SettingsForm from './components/settings-form';
 
 interface SettingsPageProps {
   params: {
@@ -13,44 +13,49 @@ const SettingsPage: React.FC<SettingsPageProps> = async ({ params }) => {
   const { userId } = auth();
 
   if (!userId) {
-    redirect("/sign-in");
+    redirect('/sign-in');
   }
 
-  const customerSettings = await prismadb.customer.findFirst({
+  const customerDetails = await prismadb.customer.findFirst({
     where: {
       id: params.customerId,
       userId,
     },
     select: {
       name: true,
-      vehicles: true
-    }
+      vehicles: true,
+    },
   });
 
-  const originSettings = await prismadb.originDetails.findFirst({
+  const originDetails = await prismadb.originDetails.findFirst({
     where: {
-      customerId: params.customerId
+      customerId: params.customerId,
     },
     select: {
-      address: true
-    }
+      address: true,
+      lat: true,
+      lng: true,
+    },
   });
 
-  
-
-  if (!customerSettings || !originSettings) {
-    redirect("/auth");
+  if (!customerDetails || !originDetails) {
+    redirect('/auth');
   }
 
-  const customerDetails = {
-    ...customerSettings,
-    ...originSettings
+  const customerSettings = {
+    ...customerDetails,
+    ...originDetails,
   };
-  
+
+  const origin = {
+    lat: originDetails.lat,
+    lng: originDetails.lng,
+  };
+
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <SettingsForm initialSettings={customerDetails}/>
+        <SettingsForm initialSettings={customerSettings} origin={origin} />
       </div>
     </div>
   );
@@ -58,7 +63,7 @@ const SettingsPage: React.FC<SettingsPageProps> = async ({ params }) => {
 
 export default SettingsPage;
 
-// const customerSettings = await prismadb.customer.findFirst({
+// const customerDetails = await prismadb.customer.findFirst({
 //   where: {
 //     id: params.customerId,
 //     userId,
