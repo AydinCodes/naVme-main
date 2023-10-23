@@ -178,13 +178,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
   }
 
   return (
-    <div className="">
+    <div>
       <Form {...form}>
-        <form
-          className="relative flex flex-col space-y-6"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className='flex flex-col space-y-4'>
             <FormField
               control={form.control}
               name="name"
@@ -228,7 +225,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
               )}
             />
 
-            <FormItem className="relative ">
+            <FormItem>
               <FormLabel
                 className={cn(
                   'font-bold',
@@ -239,26 +236,29 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
               >
                 Address
               </FormLabel>
-              <div className="absolute left-0 top-[-0.4rem] w-[100%] ">
-                <div className="flex justify-between items-center">
-                  <FormControl className="w-full">
-                    {editAddress ? (
-                      isLoaded ? (
-                        <GooglePlacesSearch
-                          className="w-[90%] md:w-[95%] lg:w-[97%]"
-                          handleSelected={handleSelect}
-                          placeholder="Enter origin address."
-                          restrictions={false}
-                        />
+              <div>
+                <div className="flex items-center gap-4 w-[100%] justify-between">
+                  <FormControl>
+                    <div className="relative w-[80%] md:w-[90%] lg:w-[95%] h-[2rem] flex items-center">
+                      {editAddress ? (
+                        isLoaded ? (
+                          <div className="absolute left-0 top-[-0.4rem] w-[100%]">
+                            <GooglePlacesSearch
+                              className="absolute top-0 left-0"
+                              handleSelected={handleSelect}
+                              placeholder="Enter origin address."
+                              restrictions={false}
+                            />
+                          </div>
+                        ) : (
+                          <Loading />
+                        )
                       ) : (
-                        <Loading />
-                      )
-                    ) : (
-                      <Label className='absolute top-8 w-[90%] md:w-[95%] lg:w-[97%]'>{newAddressDetails.address}</Label>
-                    )}
+                        <Label>{newAddressDetails.address}</Label>
+                      )}
+                    </div>
                   </FormControl>
                   <Button
-                    className="absolute right-[-0.5rem] top-[.3rem]"
                     disabled={newAddressDetails.address.length === 0}
                     onClick={() => setEditAddress(!editAddress)}
                     size={'icon'}
@@ -270,17 +270,12 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                 </div>
               </div>
               {newAddressDetails.address.length === 0 && (
-                <p
-                  className={
-                    'text-sm font-medium text-destructive z-[1] relative top-[2rem]'
-                  }
-                >
+                <p className={'text-sm font-medium text-destructive'}>
                   Please enter an address before starting.
                 </p>
               )}
             </FormItem>
-          </div>
-          <div className="flex flex-col justify-end w-full h-[33rem] md:h-[48rem]">
+
             <FormField
               control={form.control}
               name="radius"
@@ -303,12 +298,8 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                 </FormItem>
               )}
             />
-            <div className="flex flex-col w-full h-[25rem] md:h-[40rem] space-y-4 mt-[2rem]">
-              <GoogleMap
-                zoom={10}
-                center={center}
-                mapContainerClassName="w-full h-[82%] md:h-[85%] rounded-[0.5rem]"
-              >
+
+              <GoogleMap zoom={10} center={center} mapContainerClassName="w-full h-[20rem]">
                 <MarkerF
                   key={'origin'}
                   position={center}
@@ -318,15 +309,14 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                   }}
                 />
               </GoogleMap>
-              <div className="w-full flex justify-end">
-                <Button
-                  className="w-full md:w-[5rem]"
-                  disabled={loading || newAddressDetails.address.length === 0}
-                  type="submit"
-                >
-                  Save
-                </Button>
-              </div>
+            <div className='w-full flex justify-end'>
+              <Button
+                className="md:w-auto w-full"
+                disabled={loading || newAddressDetails.address.length === 0}
+                type="submit"
+              >
+                Save
+              </Button>
             </div>
           </div>
         </form>
