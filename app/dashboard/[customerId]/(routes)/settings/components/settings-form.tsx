@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useEffect, useMemo, useState } from 'react';
 import GooglePlacesSearch from '@/components/google-places-search';
-import { GoogleMap, useLoadScript } from '@react-google-maps/api';
+import { GoogleMap, MarkerF, useLoadScript } from '@react-google-maps/api';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
 import { redirect, useParams, useRouter } from 'next/navigation';
@@ -53,10 +53,7 @@ interface SettingsFormProps {
   origin: Origin;
 }
 
-interface NewAddressDetails
-  extends Omit<JobObject, 'jobId' | 'placeId' | 'suburb' | 'customerName'> {}
-
-interface DisplayAddressDetails {
+interface NewAddressDetails {
   address: string;
   lat: number;
   lng: number;
@@ -86,16 +83,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
   const [loading, setLoading] = useState(false);
   const [editAddress, setEditAddress] = useState(false);
   const [addressError, setAddressError] = useState(false);
-  const [displayAddress, setDisplayAddress] = useState<DisplayAddressDetails>({
-    address: '',
-    lat: 0,
-    lng: 0,
-  });
+
   const [newAddressDetails, setNewAddressDetails] = useState<NewAddressDetails>(
     {
       address: '',
-      state: '',
-      country: '',
       lat: 0,
       lng: 0,
     }
@@ -104,7 +95,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
   useEffect(() => {
     if (initialSettings.address.length > 0) {
       setEditAddress(false);
-      setDisplayAddress({
+      setNewAddressDetails({
         address: initialSettings.address,
         lat: origin.lat,
         lng: origin.lng,
@@ -122,7 +113,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
   const { register, handleSubmit } = form;
 
   const onSubmit = async (data: SettingsFormValues) => {
-    if (displayAddress.address.length > 0) {
+    if (newAddressDetails.address.length > 0) {
       try {
         setLoading(true);
 
@@ -130,11 +121,15 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           name: data.name,
           vehicles: data.vehicles,
         };
+        let countryData = {
+          country: 'au',
+        };
 
         if (newAddressDetails.address.length > 0) {
           newData = {
             ...newData,
             ...newAddressDetails,
+            ...countryData,
           };
         }
 
@@ -165,13 +160,6 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
   const handleSelect = (selectedAddress: JobObject) => {
     setNewAddressDetails({
       address: selectedAddress.address,
-      state: selectedAddress.state,
-      country: selectedAddress.country,
-      lat: selectedAddress.lat,
-      lng: selectedAddress.lng,
-    });
-    setDisplayAddress({
-      address: selectedAddress.address,
       lat: selectedAddress.lat,
       lng: selectedAddress.lng,
     });
@@ -189,7 +177,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
   }
 
   return (
-    <div className="h-[85vh]">
+    <div className="">
       <Form {...form}>
         <form
           className="h-[100%] relative flex flex-col space-y-6"
@@ -239,65 +227,73 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
               )}
             />
 
-            <FormItem className="relative">
+            <FormItem className="relative ">
               <FormLabel
                 className={cn(
                   'font-bold',
-                  displayAddress.address.length === 0 ? 'text-destructive' : ''
+                  newAddressDetails.address.length === 0
+                    ? 'text-destructive'
+                    : ''
                 )}
               >
                 Address
               </FormLabel>
-
-              <div className="flex justify-between items-center">
-                <FormControl className="w-[95%]">
-                  {editAddress ? (
-                    isLoaded ? (
-                      <GooglePlacesSearch
-                        className="relative"
-                        handleSelected={handleSelect}
-                        placeholder="Enter origin address."
-                        restrictions={false}
-                      />
+              <div className="absolute left-0 top-[-0.4rem] w-[100%]">
+                <div className="flex justify-between items-center">
+                  <FormControl className="w-full">
+                    {editAddress ? (
+                      isLoaded ? (
+                        <GooglePlacesSearch
+                          className="w-[90%] md:w-[95%] lg:w-[97%]"
+                          handleSelected={handleSelect}
+                          placeholder="Enter origin address."
+                          restrictions={false}
+                        />
+                      ) : (
+                        <Loading />
+                      )
                     ) : (
-                      <Loading />
-                    )
-                  ) : (
-                    <Label>{displayAddress.address}</Label>
-                  )}
-                </FormControl>
-                <Button
-                  className="relative"
-                  disabled={displayAddress.address.length === 0}
-                  onClick={() => setEditAddress(!editAddress)}
-                  size={'icon'}
-                  variant={'ghost'}
-                  type="button"
-                >
-                  {editAddress === true ? <CheckSquare /> : <Edit />}
-                </Button>
+                      <Label>{newAddressDetails.address}</Label>
+                    )}
+                  </FormControl>
+                  <Button
+                    className="absolute right-[-0.5rem] top-[.3rem]"
+                    disabled={newAddressDetails.address.length === 0}
+                    onClick={() => setEditAddress(!editAddress)}
+                    size={'icon'}
+                    variant={'ghost'}
+                    type="button"
+                  >
+                    {editAddress === true ? <CheckSquare /> : <Edit />}
+                  </Button>
+                </div>
               </div>
-              {displayAddress.address.length === 0 && (
-                <p
-                  className={
-                    'text-sm font-medium text-destructive z-[1] absolute top-[5rem] left-0'
-                  }
-                >
+              {newAddressDetails.address.length === 0 && (
+                <p className={'text-sm font-medium text-destructive z-[1] relative top-[2rem]'}>
                   Please enter an address before starting.
                 </p>
               )}
             </FormItem>
           </div>
-          <div className="flex flex-col w-full h-full space-y-4">
+          <div className="flex flex-col w-full h-[25rem]  md:h-[35rem] space-y-4 justify-end ">
             <GoogleMap
               zoom={10}
               center={center}
-              mapContainerClassName="w-full h-full rounded-[0.5rem]"
-            ></GoogleMap>
+              mapContainerClassName="w-full h-[82%] md:h-[85%] rounded-[0.5rem]"
+            >
+              <MarkerF
+                key={'origin'}
+                position={center}
+                icon={{
+                  url: '/green.svg',
+                  scaledSize: new window.google.maps.Size(45, 45),
+                }}
+              />
+            </GoogleMap>
             <div className="w-full flex justify-end">
               <Button
                 className="w-full md:w-[5rem]"
-                disabled={loading || displayAddress.address.length === 0}
+                disabled={loading || newAddressDetails.address.length === 0}
                 type="submit"
               >
                 Save

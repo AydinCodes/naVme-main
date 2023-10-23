@@ -26,7 +26,11 @@ export default async function DashboardLayout({
         userId: userId,
       },
     });
-
+    await prismadb.originDetails.create({
+      data: {
+        customerId: customer.id,
+      },
+    });
     redirect(`/dashboard/${customer.id}`);
   }
 
