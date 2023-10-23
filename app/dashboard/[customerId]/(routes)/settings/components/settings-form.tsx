@@ -17,14 +17,13 @@ import GooglePlacesSearch from '@/components/google-places-search';
 import { GoogleMap, MarkerF, useLoadScript } from '@react-google-maps/api';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
-import { redirect, useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Label } from '@/components/ui/label';
 import { CheckSquare, Edit } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Loading } from '@/components/loading';
 import { JobObject } from '@/types/job-types';
-import { useJobs } from '@/hooks/use-jobs';
 import { CenterPageLoading } from '@/components/loading';
 
 const formSchema = z.object({
@@ -33,6 +32,7 @@ const formSchema = z.object({
     .min(3, 'Your name is too short. Please enter a valid name.')
     .max(50, 'Your name is too long. Please enter a valid name.'),
   vehicles: z.number().int().gte(1).lte(30),
+  radius: z.number().int().gte(1).lte(30),
 });
 
 type SettingsFormValues = z.infer<typeof formSchema>;
@@ -120,6 +120,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
         let newData = {
           name: data.name,
           vehicles: data.vehicles,
+          radius: data.radius,
         };
         let countryData = {
           country: 'au',
@@ -180,7 +181,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
     <div className="">
       <Form {...form}>
         <form
-          className="h-[100%] relative flex flex-col space-y-6"
+          className="relative flex flex-col space-y-6"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="space-y-5">
@@ -238,7 +239,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
               >
                 Address
               </FormLabel>
-              <div className="absolute left-0 top-[-0.4rem] w-[100%]">
+              <div className="absolute left-0 top-[-0.4rem] w-[100%] ">
                 <div className="flex justify-between items-center">
                   <FormControl className="w-full">
                     {editAddress ? (
@@ -253,7 +254,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                         <Loading />
                       )
                     ) : (
-                      <Label>{newAddressDetails.address}</Label>
+                      <Label className='absolute top-8 w-[90%] md:w-[95%] lg:w-[97%]'>{newAddressDetails.address}</Label>
                     )}
                   </FormControl>
                   <Button
@@ -269,35 +270,63 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                 </div>
               </div>
               {newAddressDetails.address.length === 0 && (
-                <p className={'text-sm font-medium text-destructive z-[1] relative top-[2rem]'}>
+                <p
+                  className={
+                    'text-sm font-medium text-destructive z-[1] relative top-[2rem]'
+                  }
+                >
                   Please enter an address before starting.
                 </p>
               )}
             </FormItem>
           </div>
-          <div className="flex flex-col w-full h-[25rem]  md:h-[35rem] space-y-4 justify-end ">
-            <GoogleMap
-              zoom={10}
-              center={center}
-              mapContainerClassName="w-full h-[82%] md:h-[85%] rounded-[0.5rem]"
-            >
-              <MarkerF
-                key={'origin'}
-                position={center}
-                icon={{
-                  url: '/green.svg',
-                  scaledSize: new window.google.maps.Size(45, 45),
-                }}
-              />
-            </GoogleMap>
-            <div className="w-full flex justify-end">
-              <Button
-                className="w-full md:w-[5rem]"
-                disabled={loading || newAddressDetails.address.length === 0}
-                type="submit"
+          <div className="flex flex-col justify-end w-full h-[33rem] md:h-[48rem]">
+            <FormField
+              control={form.control}
+              name="radius"
+              render={() => (
+                <FormItem>
+                  <FormLabel className="font-bold">Radius</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      {...register('radius', { valueAsNumber: true })}
+                      min={1}
+                      max={30}
+                      autoComplete="off"
+                      disabled={loading}
+                      maxLength={64}
+                      placeholder="Enter your approximate job radius"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex flex-col w-full h-[25rem] md:h-[40rem] space-y-4 mt-[2rem]">
+              <GoogleMap
+                zoom={10}
+                center={center}
+                mapContainerClassName="w-full h-[82%] md:h-[85%] rounded-[0.5rem]"
               >
-                Save
-              </Button>
+                <MarkerF
+                  key={'origin'}
+                  position={center}
+                  icon={{
+                    url: '/green.svg',
+                    scaledSize: new window.google.maps.Size(45, 45),
+                  }}
+                />
+              </GoogleMap>
+              <div className="w-full flex justify-end">
+                <Button
+                  className="w-full md:w-[5rem]"
+                  disabled={loading || newAddressDetails.address.length === 0}
+                  type="submit"
+                >
+                  Save
+                </Button>
+              </div>
             </div>
           </div>
         </form>
