@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -10,29 +10,30 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { useEffect, useMemo, useState } from 'react';
-import GooglePlacesSearch from '@/components/google-places-search';
-import { GoogleMap, MarkerF, useLoadScript } from '@react-google-maps/api';
-import { Button } from '@/components/ui/button';
-import axios from 'axios';
-import { useParams, useRouter } from 'next/navigation';
-import { Label } from '@/components/ui/label';
-import { CheckSquare, Edit } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useToast } from '@/hooks/use-toast';
-import { Loading } from '@/components/loading';
-import { JobObject } from '@/types/job-types';
-import { CenterPageLoading } from '@/components/loading';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useEffect, useMemo, useState } from "react";
+import GooglePlacesSearch from "@/components/google-places-search";
+import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
+import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { useParams, useRouter } from "next/navigation";
+import { Label } from "@/components/ui/label";
+import { CheckSquare, Edit } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
+import { Loading } from "@/components/loading";
+import { JobObject } from "@/types/job-types";
+import { CenterPageLoading } from "@/components/loading";
+import { calculateBounds } from "@/lib/coordinates";
 
 const formSchema = z.object({
   name: z
     .string()
-    .min(3, 'Your name is too short. Please enter a valid name.')
-    .max(50, 'Your name is too long. Please enter a valid name.'),
+    .min(3, "Your name is too short. Please enter a valid name.")
+    .max(50, "Your name is too long. Please enter a valid name."),
   vehicles: z.number().int().gte(1).lte(30),
-  radius: z.number().int().gte(1).lte(30),
+  radius: z.number().int().gte(1).lte(10000),
 });
 
 type SettingsFormValues = z.infer<typeof formSchema>;
@@ -57,14 +58,22 @@ interface NewAddressDetails {
   address: string;
   lat: number;
   lng: number;
-  north?: number;
-  south?: number;
-  east?: number;
-  west?: number;
 }
 
-const libraries: ('places' | 'geometry' | 'drawing' | 'visualization')[] = [
-  'places',
+interface BoundsInterface {
+  north: number;
+  south: number;
+  east: number;
+  west: number;
+}
+
+interface CenterInterface {
+  lat: number;
+  lng: number;
+}
+
+const libraries: ("places" | "geometry" | "drawing" | "visualization")[] = [
+  "places",
 ];
 
 const SettingsForm: React.FC<SettingsFormProps> = ({
@@ -75,7 +84,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
   const router = useRouter();
   const { toast } = useToast();
 
-  const center = useMemo(
+  const originalCenter = useMemo(
     () => ({ lat: origin.lat, lng: origin.lng }),
     [origin.lat, origin.lng]
   );
@@ -83,14 +92,35 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
   const [loading, setLoading] = useState(false);
   const [editAddress, setEditAddress] = useState(false);
   const [addressError, setAddressError] = useState(false);
+  const [radius, setRadius] = useState(10);
+  const [center, setCenter] = useState<CenterInterface>(originalCenter);
+  const [bounds, setBounds] = useState<BoundsInterface>({
+    north: 0,
+    south: 0,
+    east: 0,
+    west: 0,
+  });
 
   const [newAddressDetails, setNewAddressDetails] = useState<NewAddressDetails>(
     {
-      address: '',
+      address: "",
       lat: 0,
       lng: 0,
     }
   );
+
+  useEffect(() => {
+    const center = {
+      lat: newAddressDetails.lat,
+      lng: newAddressDetails.lng,
+    };
+    setCenter(center);
+  }, [newAddressDetails.address]);
+
+  useEffect(() => {
+    const bounds = calculateBounds(center, radius);
+    setBounds(bounds.bounds);
+  }, [radius]);
 
   useEffect(() => {
     if (initialSettings.address.length > 0) {
@@ -123,7 +153,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           radius: data.radius,
         };
         let countryData = {
-          country: 'au',
+          country: "au",
         };
 
         if (newAddressDetails.address.length > 0) {
@@ -139,16 +169,16 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
         router.refresh();
 
         toast({
-          variant: 'default',
-          title: 'Awesome!',
-          description: 'Your settings have been updated.',
+          variant: "default",
+          title: "Awesome!",
+          description: "Your settings have been updated.",
         });
         router.push(`/dashboard/${params.customerId}`);
       } catch (error) {
         toast({
-          variant: 'destructive',
-          title: 'Uh oh.',
-          description: 'Something went wrong.',
+          variant: "destructive",
+          title: "Uh oh.",
+          description: "Something went wrong.",
         });
       } finally {
         setLoading(false);
@@ -181,7 +211,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
     <div>
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className='flex flex-col space-y-4'>
+          <div className="flex flex-col space-y-4">
             <FormField
               control={form.control}
               name="name"
@@ -211,7 +241,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                   <FormControl>
                     <Input
                       type="number"
-                      {...register('vehicles', { valueAsNumber: true })}
+                      {...register("vehicles", { valueAsNumber: true })}
                       min={1}
                       max={30}
                       autoComplete="off"
@@ -228,10 +258,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
             <FormItem>
               <FormLabel
                 className={cn(
-                  'font-bold',
+                  "font-bold",
                   newAddressDetails.address.length === 0
-                    ? 'text-destructive'
-                    : ''
+                    ? "text-destructive"
+                    : ""
                 )}
               >
                 Address
@@ -261,8 +291,8 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                   <Button
                     disabled={newAddressDetails.address.length === 0}
                     onClick={() => setEditAddress(!editAddress)}
-                    size={'icon'}
-                    variant={'ghost'}
+                    size={"icon"}
+                    variant={"ghost"}
                     type="button"
                   >
                     {editAddress === true ? <CheckSquare /> : <Edit />}
@@ -270,7 +300,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                 </div>
               </div>
               {newAddressDetails.address.length === 0 && (
-                <p className={'text-sm font-medium text-destructive'}>
+                <p className={"text-sm font-medium text-destructive"}>
                   Please enter an address before starting.
                 </p>
               )}
@@ -285,13 +315,15 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                   <FormControl>
                     <Input
                       type="number"
-                      {...register('radius', { valueAsNumber: true })}
+                      {...register("radius", { valueAsNumber: true })}
                       min={1}
-                      max={30}
+                      max={10000}
                       autoComplete="off"
                       disabled={loading}
                       maxLength={64}
                       placeholder="Enter your approximate job radius"
+                      onChange={(e) => setRadius(parseInt(e.target.value))}
+                      value={radius.toString()}
                     />
                   </FormControl>
                   <FormMessage />
@@ -299,17 +331,53 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
               )}
             />
 
-              <GoogleMap zoom={10} center={center} mapContainerClassName="w-full h-[20rem]">
-                <MarkerF
-                  key={'origin'}
-                  position={center}
-                  icon={{
-                    url: '/green.svg',
-                    scaledSize: new window.google.maps.Size(45, 45),
-                  }}
-                />
-              </GoogleMap>
-            <div className='w-full flex justify-end'>
+            <GoogleMap
+              zoom={10}
+              center={center}
+              mapContainerClassName="w-full h-[20rem]"
+            >
+              <MarkerF
+                key={"origin"}
+                position={center}
+                icon={{
+                  url: "/green.svg",
+                  scaledSize: new window.google.maps.Size(45, 45),
+                }}
+              />
+              <MarkerF
+                position={{ lat: bounds.north, lng: bounds.east }}
+                icon={{
+                  url: "/red.svg",
+                  scaledSize: new window.google.maps.Size(40, 40),
+                }}
+                zIndex={1000}
+              />
+              <MarkerF
+                position={{ lat: bounds.north, lng: bounds.west }}
+                icon={{
+                  url: "/red.svg",
+                  scaledSize: new window.google.maps.Size(40, 40),
+                }}
+                zIndex={1000}
+              />
+              <MarkerF
+                position={{ lat: bounds.south, lng: bounds.east }}
+                icon={{
+                  url: "/red.svg",
+                  scaledSize: new window.google.maps.Size(40, 40),
+                }}
+                zIndex={1000}
+              />
+              <MarkerF
+                position={{ lat: bounds.south, lng: bounds.west }}
+                icon={{
+                  url: "/red.svg",
+                  scaledSize: new window.google.maps.Size(40, 40),
+                }}
+                zIndex={1000}
+              />
+            </GoogleMap>
+            <div className="w-full flex justify-end">
               <Button
                 className="md:w-auto w-full"
                 disabled={loading || newAddressDetails.address.length === 0}
