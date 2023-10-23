@@ -11,6 +11,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { useEffect, useState } from 'react';
+import { getHomeRoutes } from '@/lib/navbar-routes';
 
 export function HomeMobileNav({
   className,
@@ -24,28 +25,7 @@ export function HomeMobileNav({
 
   const pathname = usePathname();
 
-  const routes = [
-    {
-      href: `/`,
-      label: 'Home',
-      active: pathname === `/`,
-    },
-    {
-      href: `/product`,
-      label: 'Product',
-      active: pathname === `/product`,
-    },
-    {
-      href: `/about`,
-      label: 'About',
-      active: pathname.startsWith(`/about`),
-    },
-    {
-      href: `/support`,
-      label: 'Support',
-      active: pathname.startsWith(`/support`),
-    },
-  ];
+  const routes = getHomeRoutes(pathname);
 
   if (!isMounted) {
     return null;
@@ -53,8 +33,8 @@ export function HomeMobileNav({
   return (
     <div>
       <Sheet>
-        <SheetTrigger className='mt-2'>
-          <Menu className='text-primary '/>
+        <SheetTrigger className="mt-2">
+          <Menu className="text-primary " />
         </SheetTrigger>
         <SheetContent>
           <nav
@@ -65,8 +45,8 @@ export function HomeMobileNav({
           >
             <ul className="list-none flex flex-col">
               {routes.map((route) => (
-                  <li key={route.href} className='text-center'>
-                    <SheetClose asChild>
+                <li key={route.href} className="text-center">
+                  <SheetClose asChild>
                     <Link
                       href={route.href}
                       className={cn(
@@ -78,8 +58,8 @@ export function HomeMobileNav({
                     >
                       {route.label}
                     </Link>
-                    </SheetClose>
-                  </li>
+                  </SheetClose>
+                </li>
               ))}
             </ul>
           </nav>

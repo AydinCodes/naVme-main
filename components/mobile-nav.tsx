@@ -11,6 +11,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { useEffect, useState } from 'react';
+import { getDashboardRoutes } from '@/lib/navbar-routes';
 
 export function MobileNav({
   className,
@@ -22,37 +23,11 @@ export function MobileNav({
     setIsMounted(true);
   }, []);
 
-  const pathname = usePathname();
+
   const params = useParams();
+  const pathname = usePathname();
 
-
-  const routes = [
-    {
-      href: `/dashboard/${params.customerId}`,
-      label: "Dashboard",
-      active: pathname === `/dashboard/${params.customerId}`,
-    },
-    {
-      href: `/dashboard/${params.customerId}/creater`,
-      label: "Run Creater",
-      active: pathname === `/dashboard/${params.customerId}/creater`,
-    },
-    {
-      href: `/dashboard/${params.customerId}/organiser`,
-      label: "Run Organiser",
-      active: pathname === `/dashboard/${params.customerId}/organiser`,
-    },
-    {
-      href: `/dashboard/${params.customerId}/settings`,
-      label: "Settings",
-      active: pathname.startsWith(`/dashboard/${params.customerId}/settings`),
-    },
-    {
-      href: `/dashboard/${params.customerId}/support`,
-      label: "Support",
-      active: pathname.startsWith(`/dashboard/${params.customerId}/support`),
-    }
-  ];
+  const routes = getDashboardRoutes(params, pathname);
 
   if (!isMounted) {
     return null;
@@ -61,18 +36,14 @@ export function MobileNav({
     <div className={cn(className)}>
       <Sheet>
         <SheetTrigger>
-          <Menu className='text-primary'/>
+          <Menu className="text-primary" />
         </SheetTrigger>
         <SheetContent side={'left'}>
-          <nav
-            className={cn(
-              'flex items-center justify-center h-[85vh]'
-            )}
-          >
+          <nav className={cn('flex items-center justify-center h-[85vh]')}>
             <ul className="list-none flex flex-col">
               {routes.map((route) => (
-                  <li key={route.href} className='text-center'>
-                    <SheetClose asChild>
+                <li key={route.href} className="text-center">
+                  <SheetClose asChild>
                     <Link
                       href={route.href}
                       className={cn(
@@ -84,8 +55,8 @@ export function MobileNav({
                     >
                       {route.label}
                     </Link>
-                    </SheetClose>
-                  </li>
+                  </SheetClose>
+                </li>
               ))}
             </ul>
           </nav>
