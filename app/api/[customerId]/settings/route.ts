@@ -46,13 +46,6 @@ export async function PATCH(
         address: address,
         lat: lat,
         lng: lng,
-        country: country,
-        state: state,
-        north: bounds.north,
-        east: bounds.east,
-        south: bounds.south,
-        west: bounds.west,
-        radius: radius
       }
     })
 
