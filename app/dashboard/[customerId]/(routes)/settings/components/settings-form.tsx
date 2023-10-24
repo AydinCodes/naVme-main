@@ -25,7 +25,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Loading } from "@/components/loading";
 import { JobObject } from "@/types/job-types";
 import { CenterPageLoading } from "@/components/loading";
-import { calculateBounds } from "@/lib/coordinates";
+import { calculateBounds, findCountry } from "@/lib/coordinates";
 
 const formSchema = z.object({
   name: z
@@ -56,7 +56,8 @@ interface CustomerSettingsInterface {
   lat: number;
   lng: number;
   radius: number;
-  bounds: BoundsInterface
+  bounds: BoundsInterface;
+  country: string | null;
 }
 
 
@@ -81,7 +82,8 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
       lat: initialSettings.lat,
       lng: initialSettings.lng,
       radius: initialSettings.radius,
-      bounds: initialSettings.bounds
+      bounds: initialSettings.bounds,
+      country: initialSettings.country,
     }
   );
 
@@ -116,15 +118,11 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
           vehicles: data.vehicles,
           radius: data.radius,
         };
-        let countryData = {
-          country: "au",
-        };
 
         if (newAddressDetails.address.length > 0) {
           newData = {
             ...newData,
             ...newAddressDetails,
-            ...countryData,
           };
         }
 
@@ -153,8 +151,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
   };
 
   const handleSelect = (selectedAddress: JobObject) => {
+    const countrycode = findCountry(selectedAddress.country);
     setNewAddressDetails({
       ...newAddressDetails,
+      country: countrycode,
       address: selectedAddress.address,
       lat: selectedAddress.lat,
       lng: selectedAddress.lng,

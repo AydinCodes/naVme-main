@@ -43,11 +43,17 @@ export const au = {
   },
 };
 
-
-export const countries = {
+export const countries: { [key: string]: string } = {
   "Australia": "au",
   "United States": "usa"
+};
+
+export const findCountry = (input: string) => {
+  const countryCode = countries[input];
+  return countryCode || null;
 }
+
+
 
 
 export const calculateBounds = (center: { lat: number; lng: number }, radius: number) => {
@@ -73,11 +79,3 @@ export const calculateBounds = (center: { lat: number; lng: number }, radius: nu
     },
   };
 };
-
-// const center = {
-//   lat: -37.4496,
-//   lng: 145.2753,
-// };
-// const radiusInKm = 100;
-// const bounds = calculateBounds(center, radiusInKm);
-// console.log(bounds);

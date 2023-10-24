@@ -35,7 +35,7 @@ model OriginDetails {
   east       Float    @default(150.3668)
   west       Float    @default(140.9617)
   state      String   @default("")
-  country    String   @default("")
+  country    String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }

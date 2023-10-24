@@ -36,6 +36,7 @@ const SettingsPage: React.FC<SettingsPageProps> = async ({ params }) => {
       lat: true,
       lng: true,
       radius: true,
+      country: true
     },
   });
 
@@ -59,6 +60,7 @@ const SettingsPage: React.FC<SettingsPageProps> = async ({ params }) => {
     ...customerDetails,
     ...originDetails,
     bounds: bounds,
+    country: originDetails.country ? originDetails.country : null
   };
 
   return (
