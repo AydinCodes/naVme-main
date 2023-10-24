@@ -62,7 +62,7 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
     }
   
     setBounds();
-  }, [restrictions]);
+  }, [restrictions, params.customerId]);
   
   
 

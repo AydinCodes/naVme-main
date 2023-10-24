@@ -78,7 +78,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
     const center = { lat: newAddressDetails.lat, lng: newAddressDetails.lng };
     const bounds = calculateBounds(center, newAddressDetails.radius);
     setNewAddressDetails({...newAddressDetails, bounds: bounds.bounds});
-  }, [newAddressDetails.radius, newAddressDetails.address]);
+  }, [newAddressDetails]);
 
   useEffect(() => {
     if (initialSettings.address.length > 0) {
