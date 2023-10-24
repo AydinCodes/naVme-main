@@ -29,13 +29,6 @@ model OriginDetails {
   address    String   @default("")
   lat        Float    @default(-26)
   lng        Float    @default(135)
-  radius     Float    @default(300)
-  north      Float    @default(-35.7624)
-  south      Float    @default(-39.136)
-  east       Float    @default(150.3668)
-  west       Float    @default(140.9617)
-  state      String   @default("")
-  country    String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
