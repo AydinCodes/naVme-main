@@ -11,7 +11,7 @@ export async function PATCH(
 
     const body = await req.json();
 
-    const { name, vehicles, address, state, country, lat, lng } = body;
+    const { name, vehicles, address, state, country, lat, lng, bounds, radius } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 401 });
@@ -48,6 +48,11 @@ export async function PATCH(
         lng: lng,
         country: country,
         state: state,
+        north: bounds.north,
+        east: bounds.east,
+        south: bounds.south,
+        west: bounds.west,
+        radius: radius
       }
     })
 

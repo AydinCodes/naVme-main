@@ -1,7 +1,7 @@
-import prismadb from '@/lib/prismadb';
-import { auth } from '@clerk/nextjs';
-import { redirect } from 'next/navigation';
-import SettingsForm from './components/settings-form';
+import prismadb from "@/lib/prismadb";
+import { auth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
+import SettingsForm from "./components/settings-form";
 
 interface SettingsPageProps {
   params: {
@@ -13,7 +13,7 @@ const SettingsPage: React.FC<SettingsPageProps> = async ({ params }) => {
   const { userId } = auth();
 
   if (!userId) {
-    redirect('/sign-in');
+    redirect("/sign-in");
   }
 
   const customerDetails = await prismadb.customer.findFirst({
@@ -35,42 +35,39 @@ const SettingsPage: React.FC<SettingsPageProps> = async ({ params }) => {
       address: true,
       lat: true,
       lng: true,
+      radius: true,
     },
   });
 
-  if (!customerDetails || !originDetails) {
-    redirect('/auth');
+  const bounds = await prismadb.originDetails.findFirst({
+    where: {
+      customerId: params.customerId,
+    },
+    select: {
+      north: true,
+      east: true,
+      south: true,
+      west: true,
+    },
+  });
+
+  if (!customerDetails || !originDetails || !bounds) {
+    redirect("/auth");
   }
 
-  const customerSettings = {
+  const originalCustomerSettings = {
     ...customerDetails,
     ...originDetails,
-  };
-
-  const origin = {
-    lat: originDetails.lat,
-    lng: originDetails.lng,
+    bounds: bounds,
   };
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <SettingsForm initialSettings={customerSettings} origin={origin} />
+        <SettingsForm initialSettings={originalCustomerSettings} />
       </div>
     </div>
   );
 };
 
 export default SettingsPage;
-
-// const customerDetails = await prismadb.customer.findFirst({
-//   where: {
-//     id: params.customerId,
-//     userId,
-//   },
-//   select: {
-//     name: true,
-//     address: true,
-//     vehicles: true
-//   }
-// });

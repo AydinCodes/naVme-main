@@ -38,26 +38,10 @@ const formSchema = z.object({
 
 type SettingsFormValues = z.infer<typeof formSchema>;
 
-type CustomerSettings = {
-  name: string;
-  address: string;
-  vehicles: number;
-};
 
-interface Origin {
-  lat: number;
-  lng: number;
-}
 
 interface SettingsFormProps {
-  initialSettings: CustomerSettings;
-  origin: Origin;
-}
-
-interface NewAddressDetails {
-  address: string;
-  lat: number;
-  lng: number;
+  initialSettings: CustomerSettingsInterface;
 }
 
 interface BoundsInterface {
@@ -67,73 +51,53 @@ interface BoundsInterface {
   west: number;
 }
 
-interface CenterInterface {
+interface CustomerSettingsInterface {
+  address: string;
   lat: number;
   lng: number;
+  radius: number;
+  bounds: BoundsInterface
 }
+
+
 
 const libraries: ("places" | "geometry" | "drawing" | "visualization")[] = [
   "places",
 ];
 
-const SettingsForm: React.FC<SettingsFormProps> = ({
-  initialSettings,
-  origin,
-}) => {
+const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
 
-  const originalCenter = useMemo(
-    () => ({ lat: origin.lat, lng: origin.lng }),
-    [origin.lat, origin.lng]
-  );
-
   const [loading, setLoading] = useState(false);
   const [editAddress, setEditAddress] = useState(false);
   const [addressError, setAddressError] = useState(false);
-  const [radius, setRadius] = useState(10);
-  const [center, setCenter] = useState<CenterInterface>(originalCenter);
-  const [bounds, setBounds] = useState<BoundsInterface>({
-    north: 0,
-    south: 0,
-    east: 0,
-    west: 0,
-  });
 
-  const [newAddressDetails, setNewAddressDetails] = useState<NewAddressDetails>(
+
+  const [newAddressDetails, setNewAddressDetails] = useState<CustomerSettingsInterface>(
     {
-      address: "",
-      lat: 0,
-      lng: 0,
+      address: initialSettings.address,
+      lat: initialSettings.lat,
+      lng: initialSettings.lng,
+      radius: initialSettings.radius,
+      bounds: initialSettings.bounds
     }
   );
 
   useEffect(() => {
-    const center = {
-      lat: newAddressDetails.lat,
-      lng: newAddressDetails.lng,
-    };
-    setCenter(center);
-  }, [newAddressDetails.address]);
-
-  useEffect(() => {
-    const bounds = calculateBounds(center, radius);
-    setBounds(bounds.bounds);
-  }, [radius]);
+    const center = { lat: newAddressDetails.lat, lng: newAddressDetails.lng };
+    const bounds = calculateBounds(center, newAddressDetails.radius);
+    setNewAddressDetails({...newAddressDetails, bounds: bounds.bounds});
+  }, [newAddressDetails.radius, newAddressDetails.address]);
 
   useEffect(() => {
     if (initialSettings.address.length > 0) {
       setEditAddress(false);
-      setNewAddressDetails({
-        address: initialSettings.address,
-        lat: origin.lat,
-        lng: origin.lng,
-      });
     } else {
       setEditAddress(true);
     }
-  }, [initialSettings, origin]);
+  }, [initialSettings]);
 
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(formSchema),
@@ -190,6 +154,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
 
   const handleSelect = (selectedAddress: JobObject) => {
     setNewAddressDetails({
+      ...newAddressDetails,
       address: selectedAddress.address,
       lat: selectedAddress.lat,
       lng: selectedAddress.lng,
@@ -322,8 +287,13 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                       disabled={loading}
                       maxLength={64}
                       placeholder="Enter your approximate job radius"
-                      onChange={(e) => setRadius(parseInt(e.target.value))}
-                      value={radius.toString()}
+                      onChange={(e) =>
+                        setNewAddressDetails({
+                          ...newAddressDetails,
+                          radius: parseInt(e.target.value),
+                        })
+                      }
+                      value={newAddressDetails.radius.toString()}
                     />
                   </FormControl>
                   <FormMessage />
@@ -332,20 +302,26 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
             />
 
             <GoogleMap
-              zoom={10}
-              center={center}
+              zoom={5}
+              center={{
+                lat: newAddressDetails.lat,
+                lng: newAddressDetails.lng,
+              }}
               mapContainerClassName="w-full h-[20rem]"
             >
               <MarkerF
                 key={"origin"}
-                position={center}
+                position={{
+                  lat: newAddressDetails.lat,
+                  lng: newAddressDetails.lng,
+                }}
                 icon={{
                   url: "/green.svg",
                   scaledSize: new window.google.maps.Size(45, 45),
                 }}
               />
               <MarkerF
-                position={{ lat: bounds.north, lng: bounds.east }}
+                position={{ lat: newAddressDetails.bounds.north, lng: newAddressDetails.bounds.east }}
                 icon={{
                   url: "/red.svg",
                   scaledSize: new window.google.maps.Size(40, 40),
@@ -353,7 +329,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                 zIndex={1000}
               />
               <MarkerF
-                position={{ lat: bounds.north, lng: bounds.west }}
+                position={{ lat: newAddressDetails.bounds.north, lng: newAddressDetails.bounds.west }}
                 icon={{
                   url: "/red.svg",
                   scaledSize: new window.google.maps.Size(40, 40),
@@ -361,7 +337,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                 zIndex={1000}
               />
               <MarkerF
-                position={{ lat: bounds.south, lng: bounds.east }}
+                position={{ lat: newAddressDetails.bounds.south, lng: newAddressDetails.bounds.east }}
                 icon={{
                   url: "/red.svg",
                   scaledSize: new window.google.maps.Size(40, 40),
@@ -369,7 +345,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                 zIndex={1000}
               />
               <MarkerF
-                position={{ lat: bounds.south, lng: bounds.west }}
+                position={{ lat: newAddressDetails.bounds.south, lng: newAddressDetails.bounds.west }}
                 icon={{
                   url: "/red.svg",
                   scaledSize: new window.google.maps.Size(40, 40),
