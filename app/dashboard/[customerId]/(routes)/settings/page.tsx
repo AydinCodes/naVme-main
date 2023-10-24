@@ -35,32 +35,32 @@ const SettingsPage: React.FC<SettingsPageProps> = async ({ params }) => {
       address: true,
       lat: true,
       lng: true,
-      radius: true,
-      country: true
+      // radius: true,
+      // country: true
     },
   });
 
-  const bounds = await prismadb.originDetails.findFirst({
-    where: {
-      customerId: params.customerId,
-    },
-    select: {
-      north: true,
-      east: true,
-      south: true,
-      west: true,
-    },
-  });
+  // const bounds = await prismadb.originDetails.findFirst({
+  //   where: {
+  //     customerId: params.customerId,
+  //   },
+  //   select: {
+  //     north: true,
+  //     east: true,
+  //     south: true,
+  //     west: true,
+  //   },
+  // });
 
-  if (!customerDetails || !originDetails || !bounds) {
+  if (!customerDetails || !originDetails) {
     redirect("/auth");
   }
 
   const originalCustomerSettings = {
     ...customerDetails,
     ...originDetails,
-    bounds: bounds,
-    country: originDetails.country ? originDetails.country : null
+    // bounds: bounds,
+    // country: originDetails.country ? originDetails.country : null
   };
 
   return (

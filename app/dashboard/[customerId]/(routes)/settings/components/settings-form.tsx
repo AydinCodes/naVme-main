@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
   FormControl,
@@ -10,47 +10,49 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useEffect, useMemo, useState } from "react";
-import GooglePlacesSearch from "@/components/google-places-search";
-import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
-import { Button } from "@/components/ui/button";
-import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
-import { Label } from "@/components/ui/label";
-import { CheckSquare, Edit } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
-import { Loading } from "@/components/loading";
-import { JobObject } from "@/types/job-types";
-import { CenterPageLoading } from "@/components/loading";
-import { calculateBounds, findCountry } from "@/lib/coordinates";
-import { CustomerSettingsInterface } from "@/types/customer-types";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { useEffect, useMemo, useState } from 'react';
+import GooglePlacesSearch from '@/components/google-places-search';
+import { GoogleMap, MarkerF, useLoadScript } from '@react-google-maps/api';
+import { Button } from '@/components/ui/button';
+import axios from 'axios';
+import { useParams, useRouter } from 'next/navigation';
+import { Label } from '@/components/ui/label';
+import { CheckSquare, Edit } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
+import { Loading } from '@/components/loading';
+import { JobObject } from '@/types/job-types';
+import { CenterPageLoading } from '@/components/loading';
+// import { calculateBounds, findCountry } from '@/lib/coordinates';
+import { CustomerSettingsInterface } from '@/types/customer-types';
 
 const formSchema = z.object({
   name: z
     .string()
-    .min(3, "Your name is too short. Please enter a valid name.")
-    .max(50, "Your name is too long. Please enter a valid name."),
+    .min(3, 'Your name is too short. Please enter a valid name.')
+    .max(50, 'Your name is too long. Please enter a valid name.'),
   vehicles: z.number().int().gte(1).lte(30),
-  radius: z.number().int().gte(1).lte(10000),
+  // radius: z.number().int().gte(1).lte(10000),
 });
 
 type SettingsFormValues = z.infer<typeof formSchema>;
 
-
-
-interface SettingsFormProps {
-  initialSettings: CustomerSettingsInterface;
+interface InitialSettingsInterface {
+  name: string;
+  lat: number;
+  lng: number;
+  vehicles: number;
+  address: string;
 }
 
+interface SettingsFormProps {
+  initialSettings: InitialSettingsInterface;
+}
 
-
-
-
-const libraries: ("places" | "geometry" | "drawing" | "visualization")[] = [
-  "places",
+const libraries: ('places' | 'geometry' | 'drawing' | 'visualization')[] = [
+  'places',
 ];
 
 const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
@@ -62,23 +64,21 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
   const [editAddress, setEditAddress] = useState(false);
   const [addressError, setAddressError] = useState(false);
 
-
-  const [newAddressDetails, setNewAddressDetails] = useState<CustomerSettingsInterface>(
-    {
+  const [newAddressDetails, setNewAddressDetails] =
+    useState<CustomerSettingsInterface>({
       address: initialSettings.address,
       lat: initialSettings.lat,
       lng: initialSettings.lng,
-      radius: initialSettings.radius,
-      bounds: initialSettings.bounds,
-      country: initialSettings.country,
-    }
-  );
+      // radius: initialSettings.radius,
+      // bounds: initialSettings.bounds,
+      // country: initialSettings.country,
+    });
 
-  useEffect(() => {
-    const center = { lat: newAddressDetails.lat, lng: newAddressDetails.lng };
-    const bounds = calculateBounds(center, newAddressDetails.radius);
-    setNewAddressDetails({...newAddressDetails, bounds: bounds.bounds});
-  }, [newAddressDetails]);
+  // useEffect(() => {
+  //   const center = { lat: newAddressDetails.lat, lng: newAddressDetails.lng };
+  //   const bounds = calculateBounds(center, newAddressDetails.radius);
+  //   setNewAddressDetails({...newAddressDetails, bounds: bounds.bounds});
+  // }, [newAddressDetails]);
 
   useEffect(() => {
     if (initialSettings.address.length > 0) {
@@ -90,7 +90,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
 
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialSettings,
+    defaultValues: {
+      name: initialSettings.name,
+      vehicles: initialSettings.vehicles,
+    },
   });
 
   const { register, handleSubmit } = form;
@@ -103,7 +106,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
         let newData = {
           name: data.name,
           vehicles: data.vehicles,
-          radius: data.radius,
+          // radius: data.radius,
         };
 
         if (newAddressDetails.address.length > 0) {
@@ -118,16 +121,16 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
         router.refresh();
 
         toast({
-          variant: "default",
-          title: "Awesome!",
-          description: "Your settings have been updated.",
+          variant: 'default',
+          title: 'Awesome!',
+          description: 'Your settings have been updated.',
         });
         router.push(`/dashboard/${params.customerId}`);
       } catch (error) {
         toast({
-          variant: "destructive",
-          title: "Uh oh.",
-          description: "Something went wrong.",
+          variant: 'destructive',
+          title: 'Uh oh.',
+          description: 'Something went wrong.',
         });
       } finally {
         setLoading(false);
@@ -138,10 +141,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
   };
 
   const handleSelect = (selectedAddress: JobObject) => {
-    const countrycode = findCountry(selectedAddress.country);
+    // const countrycode = findCountry(selectedAddress.country);
     setNewAddressDetails({
       ...newAddressDetails,
-      country: countrycode,
+      // country: countrycode,
       address: selectedAddress.address,
       lat: selectedAddress.lat,
       lng: selectedAddress.lng,
@@ -193,7 +196,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
                   <FormControl>
                     <Input
                       type="number"
-                      {...register("vehicles", { valueAsNumber: true })}
+                      {...register('vehicles', { valueAsNumber: true })}
                       min={1}
                       max={30}
                       autoComplete="off"
@@ -210,10 +213,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
             <FormItem>
               <FormLabel
                 className={cn(
-                  "font-bold",
+                  'font-bold',
                   newAddressDetails.address.length === 0
-                    ? "text-destructive"
-                    : ""
+                    ? 'text-destructive'
+                    : ''
                 )}
               >
                 Address
@@ -243,8 +246,8 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
                   <Button
                     disabled={newAddressDetails.address.length === 0}
                     onClick={() => setEditAddress(!editAddress)}
-                    size={"icon"}
-                    variant={"ghost"}
+                    size={'icon'}
+                    variant={'ghost'}
                     type="button"
                   >
                     {editAddress === true ? <CheckSquare /> : <Edit />}
@@ -252,13 +255,13 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
                 </div>
               </div>
               {newAddressDetails.address.length === 0 && (
-                <p className={"text-sm font-medium text-destructive"}>
+                <p className={'text-sm font-medium text-destructive'}>
                   Please enter an address before starting.
                 </p>
               )}
             </FormItem>
 
-            <FormField
+            {/* <FormField
               control={form.control}
               name="radius"
               render={() => (
@@ -339,7 +342,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
                 }}
                 zIndex={1000}
               />
-            </GoogleMap>
+            </GoogleMap> */}
             <div className="w-full flex justify-end">
               <Button
                 className="md:w-auto w-full"
