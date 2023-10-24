@@ -26,6 +26,7 @@ import { Loading } from "@/components/loading";
 import { JobObject } from "@/types/job-types";
 import { CenterPageLoading } from "@/components/loading";
 import { calculateBounds, findCountry } from "@/lib/coordinates";
+import { CustomerSettingsInterface } from "@/types/customer-types";
 
 const formSchema = z.object({
   name: z
@@ -44,21 +45,7 @@ interface SettingsFormProps {
   initialSettings: CustomerSettingsInterface;
 }
 
-interface BoundsInterface {
-  north: number;
-  south: number;
-  east: number;
-  west: number;
-}
 
-interface CustomerSettingsInterface {
-  address: string;
-  lat: number;
-  lng: number;
-  radius: number;
-  bounds: BoundsInterface;
-  country: string | null;
-}
 
 
 
