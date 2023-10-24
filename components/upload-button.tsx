@@ -50,7 +50,7 @@ const UploadButton: React.FC<UploadButtonProps> = () => {
             setLoading(false);
           }
           if (fileInputRef.current) {
-            fileInputRef.current.value = ''; // This clears the input field
+            fileInputRef.current.value = '';
           }
         };
 

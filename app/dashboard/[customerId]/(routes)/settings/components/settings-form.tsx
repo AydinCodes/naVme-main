@@ -25,7 +25,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Loading } from '@/components/loading';
 import { JobObject } from '@/types/job-types';
 import { CenterPageLoading } from '@/components/loading';
-// import { calculateBounds, findCountry } from '@/lib/coordinates';
 import { CustomerSettingsInterface } from '@/types/customer-types';
 
 const formSchema = z.object({
@@ -34,7 +33,6 @@ const formSchema = z.object({
     .min(3, 'Your name is too short. Please enter a valid name.')
     .max(50, 'Your name is too long. Please enter a valid name.'),
   vehicles: z.number().int().gte(1).lte(30),
-  // radius: z.number().int().gte(1).lte(10000),
 });
 
 type SettingsFormValues = z.infer<typeof formSchema>;
@@ -69,16 +67,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
       address: initialSettings.address,
       lat: initialSettings.lat,
       lng: initialSettings.lng,
-      // radius: initialSettings.radius,
-      // bounds: initialSettings.bounds,
-      // country: initialSettings.country,
+
     });
 
-  // useEffect(() => {
-  //   const center = { lat: newAddressDetails.lat, lng: newAddressDetails.lng };
-  //   const bounds = calculateBounds(center, newAddressDetails.radius);
-  //   setNewAddressDetails({...newAddressDetails, bounds: bounds.bounds});
-  // }, [newAddressDetails]);
+
 
   useEffect(() => {
     if (initialSettings.address.length > 0) {
@@ -106,7 +98,6 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
         let newData = {
           name: data.name,
           vehicles: data.vehicles,
-          // radius: data.radius,
         };
 
         if (newAddressDetails.address.length > 0) {
@@ -141,10 +132,8 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
   };
 
   const handleSelect = (selectedAddress: JobObject) => {
-    // const countrycode = findCountry(selectedAddress.country);
     setNewAddressDetails({
       ...newAddressDetails,
-      // country: countrycode,
       address: selectedAddress.address,
       lat: selectedAddress.lat,
       lng: selectedAddress.lng,
@@ -261,88 +250,6 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
               )}
             </FormItem>
 
-            {/* <FormField
-              control={form.control}
-              name="radius"
-              render={() => (
-                <FormItem>
-                  <FormLabel className="font-bold">Radius</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      {...register("radius", { valueAsNumber: true })}
-                      min={1}
-                      max={10000}
-                      autoComplete="off"
-                      disabled={loading}
-                      maxLength={64}
-                      placeholder="Enter your approximate job radius"
-                      onChange={(e) =>
-                        setNewAddressDetails({
-                          ...newAddressDetails,
-                          radius: parseInt(e.target.value),
-                        })
-                      }
-                      value={newAddressDetails.radius.toString()}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <GoogleMap
-              zoom={5}
-              center={{
-                lat: newAddressDetails.lat,
-                lng: newAddressDetails.lng,
-              }}
-              mapContainerClassName="w-full h-[20rem]"
-            >
-              <MarkerF
-                key={"origin"}
-                position={{
-                  lat: newAddressDetails.lat,
-                  lng: newAddressDetails.lng,
-                }}
-                icon={{
-                  url: "/green.svg",
-                  scaledSize: new window.google.maps.Size(45, 45),
-                }}
-              />
-              <MarkerF
-                position={{ lat: newAddressDetails.bounds.north, lng: newAddressDetails.bounds.east }}
-                icon={{
-                  url: "/red.svg",
-                  scaledSize: new window.google.maps.Size(40, 40),
-                }}
-                zIndex={1000}
-              />
-              <MarkerF
-                position={{ lat: newAddressDetails.bounds.north, lng: newAddressDetails.bounds.west }}
-                icon={{
-                  url: "/red.svg",
-                  scaledSize: new window.google.maps.Size(40, 40),
-                }}
-                zIndex={1000}
-              />
-              <MarkerF
-                position={{ lat: newAddressDetails.bounds.south, lng: newAddressDetails.bounds.east }}
-                icon={{
-                  url: "/red.svg",
-                  scaledSize: new window.google.maps.Size(40, 40),
-                }}
-                zIndex={1000}
-              />
-              <MarkerF
-                position={{ lat: newAddressDetails.bounds.south, lng: newAddressDetails.bounds.west }}
-                icon={{
-                  url: "/red.svg",
-                  scaledSize: new window.google.maps.Size(40, 40),
-                }}
-                zIndex={1000}
-              />
-            </GoogleMap> */}
             <div className="w-full flex justify-end">
               <Button
                 className="md:w-auto w-full"

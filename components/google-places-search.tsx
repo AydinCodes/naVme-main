@@ -7,18 +7,14 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { au } from '@/lib/coordinates';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
 } from 'use-places-autocomplete';
 import { SelectedJobObject } from '@/types/job-types';
 import { cn } from '@/lib/utils';
-// import { SearchOriginInterface } from '@/types/customer-types';
-import axios from 'axios';
 import { useParams } from 'next/navigation';
-const country = au;
 
 interface GooglePlacesSearchProps {
   handleSelected: any;
@@ -31,41 +27,13 @@ const GooglePlacesSearch: React.FC<GooglePlacesSearchProps> = ({
   handleSelected,
   className,
   placeholder,
-  restrictions
 }) => {
   const [showResults, setShowResults] = useState(false);
-  // const [originDetails, setOriginDetails] = useState<SearchOriginInterface>({
-  //   country: "",
-  //   bounds: {
-  //     north: 0,
-  //     south: 0,
-  //     east: 0,
-  //     west: 0,
-  //   }
 
-  // })
   const itemSelectedRef = useRef(false);
   const params = useParams()
 
-  // useEffect(() => {
-  //   const setBounds = async () => {
-  //     if (restrictions === true) {
-  //       try {
-  //         const response = await axios.get(`/api/${params.customerId}/get-origin`);
-  //         const originDetailsData = response.data;
-  //         setOriginDetails(originDetailsData);
-  //       } catch (error) {
-  //         console.error('Error fetching origin details:', error);
-  //       }
-  //     }
-  //   }
   
-  //   setBounds();
-  // }, [restrictions, params.customerId]);
-  
-  
-  
-
   const {
     ready,
     value,
